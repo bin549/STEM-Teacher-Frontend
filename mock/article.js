@@ -40,11 +40,9 @@ module.exports = [
         if (title && item.title.indexOf(title) < 0) return false
         return true
       })
-
       if (sort === '-id') {
         mockList = mockList.reverse()
       }
-
       const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
 
       return {
@@ -113,4 +111,3 @@ module.exports = [
     }
   }
 ]
-
