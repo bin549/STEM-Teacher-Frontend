@@ -26,11 +26,6 @@ function position() {
   return document.documentElement.scrollTop || document.body.parentNode.scrollTop || document.body.scrollTop
 }
 
-/**
- * @param {number} to
- * @param {number} duration
- * @param {Function} callback
- */
 export function scrollTo(to, duration, callback) {
   const start = position()
   const change = to - start

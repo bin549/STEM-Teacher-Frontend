@@ -1,13 +1,10 @@
 <template>
   <div class="dashboard-editor-container">
     <github-corner class="github-corner" />
-
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
-
     <el-row style="background: #fff; padding: 16px 16px 0; margin-bottom: 32px">
       <line-chart :chart-data="lineChartData" />
     </el-row>
-
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
@@ -25,7 +22,6 @@
         </div>
       </el-col>
     </el-row>
-
     <el-row :gutter="8">
       <el-col
         :xs="{ span: 24 }"
@@ -122,14 +118,12 @@ export default {
   padding: 32px;
   background-color: rgb(240, 242, 245);
   position: relative;
-
   .github-corner {
     position: absolute;
     top: 0px;
     border: 0;
     right: 0;
   }
-
   .chart-wrapper {
     background: #fff;
     padding: 16px 16px 0;

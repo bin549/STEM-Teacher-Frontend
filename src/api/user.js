@@ -1,24 +1,35 @@
 import request from '@/utils/request'
+import axios from '@/utils/http'
 
 export function login(data) {
   return request({
-    url: '/vue-element-admin/user/login',
+    url: '/api/token/login/',
     method: 'post',
     data
   })
 }
 
-export function getInfo(token) {
+export function logout() {
   return request({
-    url: '/vue-element-admin/user/info',
+    url: '/user/logout',
+    method: 'post'
+  })
+}
+
+export function getInfo(token) {
+  return axios({
+    url: '/api/getUserByToken/',
     method: 'get',
     params: { token }
   })
 }
 
-export function logout() {
-  return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
+
+
+export function fetchList(query) {
+    return axios({
+      url: '/api/getStudentByOwnerId/',
+      method: 'get',
+      params: query
   })
 }

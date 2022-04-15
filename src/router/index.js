@@ -63,19 +63,6 @@ export const constantRoutes = [
   //   ]
   // },
   {
-    path: '/guide',
-    component: Layout,
-    redirect: '/guide/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'Guide', icon: 'guide', noCache: true }
-      }
-    ]
-  },
-  {
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',
@@ -104,30 +91,6 @@ export const asyncRoutes = [
         roles: ['admin', 'editor']
     },
     children: [{
-        path: "media",
-        name: "Media",
-        component: () =>
-            import('@/views/course/media'),
-        meta: {
-            title: "图文"
-        }
-    }, {
-        path: "audio",
-        name: "Audio",
-        component: () =>
-            import('@/views/course/audio'),
-        meta: {
-            title: "音频"
-        }
-    }, {
-        path: "video",
-        name: "Video",
-        component: () =>
-            import('@/views/course/video'),
-        meta: {
-            title: "视频"
-        }
-    }, {
         path: "column",
         name: "Column",
         component: () =>
@@ -144,8 +107,93 @@ export const asyncRoutes = [
         meta: {
             title: "专栏详情"
         }
-    }]
+    },
+        {
+        path: "media",
+        name: "Media",
+        component: () =>
+            import('@/views/course/media'),
+        meta: {
+            title: "图文"
+        }
+    },
+    // {
+    //     path: "audio",
+    //     name: "Audio",
+    //     component: () =>
+    //         import('@/views/course/audio'),
+    //     meta: {
+    //         title: "音频"
+    //     }
+    // },
+    {
+        path: "video",
+        name: "Video",
+        component: () =>
+            import('@/views/course/video'),
+        meta: {
+            title: "视频"
+        }
+    }, ]
   },
+
+
+    {
+      path: '/activity',
+      component: Layout,
+      redirect: "/activity/assignment",
+      name: "Assignment",
+      alwaysShow: true,
+      meta: {
+          title: "活动",
+          icon: "excel",
+          roles: ['admin', 'editor']
+      },
+      children: [{
+          path: "assignment",
+          name: "Activity",
+          component: () =>
+              import('@/views/activity/assignment'),
+          meta: {
+              title: "活动"
+          }
+      }, {
+          path: "execution",
+          name: "Execution",
+          component: () =>
+                import('@/views/activity/execution'),
+          meta: {
+              title: "执行情况"
+          }
+      },
+      ]
+    },
+        {
+          path: '/student',
+          component: Layout,
+          children: [
+            {
+              path: 'index',
+              component: () => import('@/views/student/index'),
+              name: 'Student',
+              meta: { title: '学生', icon: 'icon', noCache: true }
+            }
+          ]
+        },
+
+      {
+        path: '/notifications',
+        component: Layout,
+        children: [
+          {
+            path: 'index',
+            component: () => import('@/views/notifications/index'),
+            name: 'Notifications',
+            meta: { title: '公告', icon: 'icon', noCache: true }
+          }
+        ]
+      },
+
 
   {
     path: '/icon',

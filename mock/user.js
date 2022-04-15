@@ -1,4 +1,3 @@
-
 const tokens = {
   admin: {
     token: 'admin-token'
@@ -7,7 +6,6 @@ const tokens = {
     token: 'editor-token'
   }
 }
-
 const users = {
   'admin-token': {
     roles: ['admin'],
@@ -22,7 +20,6 @@ const users = {
     name: 'Normal Editor'
   }
 }
-
 module.exports = [
   // user login
   {
@@ -31,7 +28,6 @@ module.exports = [
     response: config => {
       const { username } = config.body
       const token = tokens[username]
-
       // mock error
       if (!token) {
         return {
@@ -39,14 +35,12 @@ module.exports = [
           message: 'Account and password are incorrect.'
         }
       }
-
       return {
         code: 20000,
         data: token
       }
     }
   },
-
   // get user info
   {
     url: '/vue-element-admin/user/info\.*',
@@ -54,7 +48,6 @@ module.exports = [
     response: config => {
       const { token } = config.query
       const info = users[token]
-
       // mock error
       if (!info) {
         return {
@@ -62,14 +55,12 @@ module.exports = [
           message: 'Login failed, unable to get user details.'
         }
       }
-
       return {
         code: 20000,
         data: info
       }
     }
   },
-
   // user logout
   {
     url: '/vue-element-admin/user/logout',

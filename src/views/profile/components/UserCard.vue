@@ -3,7 +3,6 @@
     <div slot="header" class="clearfix">
       <span>About me</span>
     </div>
-
     <div class="user-profile">
       <div class="box-center">
         <pan-thumb
@@ -23,7 +22,6 @@
         </div>
       </div>
     </div>
-
     <div class="user-bio">
       <div class="user-education user-bio-section">
         <div class="user-bio-section-header">
@@ -35,7 +33,6 @@
           </div>
         </div>
       </div>
-
       <div class="user-skills user-bio-section">
         <div class="user-bio-section-header">
           <svg-icon icon-class="skill" /><span>Skills</span>
