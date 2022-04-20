@@ -37,10 +37,10 @@ module.exports = {
     'camelcase': [0, {
       'properties': 'always'
     }],
-    'comma-dangle': 'off', 
+    'comma-dangle': 'off',
     'comma-spacing': [2, {
       'before': false,
-      'after': true
+      'after': true 
     }],
     'comma-style': [2, 'last'],
     'constructor-super': 2,
