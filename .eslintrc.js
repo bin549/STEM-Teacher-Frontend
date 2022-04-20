@@ -31,7 +31,7 @@ module.exports = {
       'after': true
     }],
     'block-spacing': [2, 'always'],
-    'brace-style': [2, '1tbs', {
+    'brace-style': [2, '1tbs', { 
       'allowSingleLine': true
     }],
     'camelcase': [0, {
@@ -46,7 +46,7 @@ module.exports = {
     'constructor-super': 2,
     'curly': [2, 'multi-line'],
     'dot-location': [2, 'property'],
-    'eol-last': 2, 
+    'eol-last': 2,
     'eqeqeq': ["error", "always", {"null": "ignore"}],
     'generator-star-spacing': [2, {
       'before': true,
