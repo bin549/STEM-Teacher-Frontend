@@ -28,12 +28,12 @@ service.interceptors.request.use(
   }
 )
 
-service.interceptors.response.use( 
+service.interceptors.response.use(
   response => {
     const res = response.data
     if (res.auth_token) {
         return res.auth_token
-    }
+    } 
     if (res.code !== 20000) {
         Message({
             message: res.message || 'Error',
