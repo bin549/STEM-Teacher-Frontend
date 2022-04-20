@@ -31,7 +31,7 @@ module.exports = {
       'after': true
     }],
     'block-spacing': [2, 'always'],
-    'brace-style': [2, '1tbs', { 
+    'brace-style': [2, '1tbs', {
       'allowSingleLine': true
     }],
     'camelcase': [0, {
@@ -172,6 +172,14 @@ module.exports = {
       'after': true
     }],
     'space-before-blocks': [2, 'always'],
+    'space-before-function-paren': [
+        'error',
+        {
+            anonymous: 'always',
+            named: 'always',
+            asyncArrow: 'always',
+        },
+    ],
     'space-before-function-paren': [2, 'never'],
     'space-in-parens': [2, 'never'],
     'space-infix-ops': 2,
