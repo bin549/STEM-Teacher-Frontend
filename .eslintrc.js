@@ -16,7 +16,7 @@ module.exports = {
   rules: {
     "vue/max-attributes-per-line": [2, {
       "singleline": 10,
-      "multiline": { 
+      "multiline": {
         "max": 1,
         "allowFirstLine": false
       }
@@ -46,7 +46,7 @@ module.exports = {
     'constructor-super': 2,
     'curly': [2, 'multi-line'],
     'dot-location': [2, 'property'],
-    'eol-last': 2,
+    'eol-last': 2, 
     'eqeqeq': ["error", "always", {"null": "ignore"}],
     'generator-star-spacing': [2, {
       'before': true,
