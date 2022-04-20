@@ -10,7 +10,6 @@ const name = defaultSettings.title || 'vue Element Admin' // page title
 const port = process.env.port || process.env.npm_config_port || 9527 // dev port
 
 module.exports = {
-  transpileDependencies: [],
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
@@ -34,10 +33,8 @@ module.exports = {
     }
   },
   chainWebpack(config) {
-    const HtmlWebpackPlugin = require("html-webpack-plugin");
     config
     .plugin('preload')
-    .use(HtmlWebpackPlugin)
     .tap(() => [
       {
         rel: 'preload',
