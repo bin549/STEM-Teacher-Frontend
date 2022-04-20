@@ -29,7 +29,6 @@ export function parseTime(time, cFormat) {
                 time = time.replace(new RegExp(/-/gm), '/')
             }
         }
-
         if ((typeof time === 'number') && (time.toString().length === 10)) {
             time = time * 1000
         }
@@ -61,9 +60,7 @@ export function formatTime(time, option) {
   }
   const d = new Date(time)
   const now = Date.now()
-
   const diff = (now - d) / 1000
-
   if (diff < 30) {
     return '刚刚'
   } else if (diff < 3600) {

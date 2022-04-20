@@ -68,7 +68,7 @@
               <el-button
                 type="primary"
               >
-                切换<a href="http://127.0.0.1:8080/log-in">学生</a>页面
+                切换<a href="http://47.106.92.143/log-in">学生</a>页面
               </el-button>
           </span>
         </div>
