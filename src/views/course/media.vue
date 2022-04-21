@@ -14,7 +14,6 @@
       新增图文
     </el-button>
     </div>
-
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -37,7 +36,6 @@
             <span>{{ row.id }}</span>
           </template>
         </el-table-column>
-
         <el-table-column label="图文内容" width="350px" min-width="180px">
           <template slot-scope="{ row }">
             <div style="display: flex">
@@ -105,7 +103,6 @@ export default {
             listQuery: {
                 type: "Photo",
             },
-
         };
     },
   created() {

@@ -301,6 +301,7 @@ import {
   deleteCourse,
   updateStatus,
   fetchGenresList,
+  updateCourse,
 } from "@/api/column";
 import { parseTime, uploadOptions } from "@/utils";
 import { mapGetters } from "vuex";
@@ -358,7 +359,7 @@ export default {
       temp: {
           id: undefined,
           title: "",
-          status: null,
+          is_visible: null,
           description: "",
           cover: "",
           genre: null,
@@ -397,6 +398,8 @@ export default {
         fileList: [],
         genresList: [],
         statusList: ['已下架', '已上架'],
+        cover_name: "",
+        cover_url: "",
 };
   },
   created() {
@@ -423,6 +426,9 @@ export default {
             formData.append("file", param.file);
             axios.post(this.uploadOptions.action, formData).then((response) => {
                 this.temp.cover = response.data["name"];
+                this.cover_name = response.data["name"];
+                this.cover_url = response.data["image"];
+
                 this.$message({
                   message: "操作成功",
                   type: "success",
@@ -500,6 +506,7 @@ export default {
           updateStatus({
             id: row.id,
             status,
+            update: "status",
           })
           .then((res) => {
             this.$message({
@@ -514,14 +521,16 @@ export default {
       },
       handleUpdate(row) {
           this.temp = Object.assign({}, row);
-          if (this.temp.cover) {
+          this.temp["status"] = this.temp["is_visible"] ? 0 :1;
+          if (this.temp.cover_img) {
             this.fileList = [
               {
-                name: this.temp.cover,
-                url: this.temp.cover,
+                name: this.temp.cover_img,
+                url: this.temp.cover_img,
               },
             ];
-      }      this.dialogStatus = "update";
+          }
+          this.dialogStatus = "update";
           this.dialogFormVisible = true;
           this.$nextTick(() => {
             this.$refs["dataForm"].clearValidate();
@@ -590,31 +599,32 @@ export default {
           });
         },
         updateData() {
-          // this.$refs["dataForm"].validate((valid) => {
-          //   if (valid) {
-          //     const tempData = Object.assign({}, this.temp);
-          //     this.dialogBtnLoading = true;
-          //     updateColumn(tempData)
-          //       .then(() => {
-          //         const index = this.list.findIndex((v) => v.id === this.temp.id);
-          //         this.list.splice(index, 1, this.temp);
-          //         this.dialogFormVisible = false;
-          //         this.$notify({
-          //           title: "Success",
-          //           message: "Update Successfully",
-          //           type: "success",
-          //           duration: 2000,
-          //         });
-          //       })
-          //       .finally(() => {
-          //         this.dialogBtnLoading = false;
-          //       });
-          //   }
-          // });
+          this.$refs["dataForm"].validate((valid) => {
+            if (valid) {
+              const tempData = Object.assign({}, this.temp);
+              tempData["update"] = "row"
+              tempData["cover_name"] = this.cover_name;
+              this.dialogBtnLoading = true;
+              updateCourse(tempData)
+                .then(() => {
+                    this.temp["get_image"] = this.cover_url;
+                  const index = this.list.findIndex((v) => v.id === this.temp.id);
+                  this.list.splice(index, 1, this.temp);
+                  this.dialogFormVisible = false;
+                  this.$notify({
+                    title: "成功",
+                    message: "更新课程成功",
+                    type: "success",
+                    duration: 2000,
+                  });
+                })
+                .finally(() => {
+                  this.dialogBtnLoading = false;
+                });
+            }
+          });
         },
-
     },
-
 };
 
 </script>

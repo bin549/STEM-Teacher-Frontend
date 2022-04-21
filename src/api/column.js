@@ -43,6 +43,14 @@ export function createCourse(data) {
     })
 }
 
+export function updateCourse(data) {
+    return axios({
+        url: '/api/updateCourse/',
+        method: 'put',
+        data
+    })
+}
+
 export function updateStatus(data) {
     return axios({
         url: '/api/updateStatus/',
@@ -65,5 +73,23 @@ export function fetchCourseLectures(query) {
         url: '/api/getLecturesByCourseId/',
         method: 'get',
         params: query
+    })
+}
+
+
+
+export function createSelect(data) {
+    return axios({
+        url: '/api/createSelect/',
+        method: 'post',
+        data
+    })
+}
+
+export function deleteSelection(data) {
+    return axios({
+        url: '/api/deleteSelection/',
+        method: 'delete',
+        data
     })
 }

@@ -72,13 +72,13 @@
               </el-button>
           </span>
         </div>
-        <el-button
+        <!-- <el-button
           class="thirdparty-button"
           type="primary"
           @click="showDialog = true"
         >
           Or connect with
-        </el-button>
+        </el-button> -->
       </div>
     </el-form>
     <el-dialog title="Or connect with" :visible.sync="showDialog">

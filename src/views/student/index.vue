@@ -4,6 +4,16 @@
           class="filter-container"
           style="display: flex; justify-content: space-between;"
         >
+            <el-button
+                v-if="currentSelectedCourse != null"
+              class="filter-item"
+              style="margin-left: 10px;"
+              type="primary"
+              icon="el-icon-edit"
+              @click="handleCreate"
+            >
+              添加学生
+            </el-button>
         <div>
             <el-input
               v-model="listQuery.keyword"
@@ -18,7 +28,7 @@
           v-model="listQuery.selectedCourse"
           placeholder="所选课程"
           clearable
-          style="float:right; width: 420px; margin-right: 30rem;"
+          style="width:32rem; margin-right: 1rem;"
           class="filter-item"
         >
           <el-option
@@ -28,12 +38,14 @@
             :value="item.id"
           />
         </el-select>
+    </div>
+        <div>
         <el-button
           v-waves
           class="filter-item"
           type="primary"
           icon="el-icon-search"
-          style="float: right; margin-right: 30rem;"
+          style="float: right; margin-right: 3rem;"
           @click="handleFilter"
         >
           搜索
@@ -101,15 +113,62 @@
           <el-button type="primary" size="mini" @click="openInfo(row.id)">
             详情
           </el-button>
+          <el-popconfirm
+            title="是否要移除该学生？"
+            @onConfirm="handleDelete(row, $index)"
+            style="margin-left: 10px"
+          >
+            <el-button
+              v-if="currentSelectedCourse != null"
+              size="mini"
+              type="danger"
+              slot="reference"
+              >退课</el-button
+            >
+          </el-popconfirm>
         </template>
       </el-table-column>
+
     </el-table>
+
+    <el-dialog
+      title="新增"
+      :visible.sync="dialogFormVisible"
+      v-loading="listLoading"
+    >
+    <el-form
+      ref="dataForm"
+      :rules="rules"
+      :model="temp"
+      label-position="left"
+      label-width="70px"
+      style="margin-left: 50px;"
+    >
+    <el-form-item label="学生序号" label-width="80px" prop="title">
+      <el-input v-model="temp.user_id"/>
+    </el-form-item>
+    </el-form>
+    <div slot="footer" >
+      <el-button @click="dialogFormVisible = false"> 取消 </el-button>
+      <el-button
+        type="primary"
+        @click="createData()"
+        :loading="dialogBtnLoading"
+      >
+        {{ dialogBtnLoading ? "提交中..." : "提交" }}
+      </el-button>
+    </div>
+    </el-dialog>
+
+
+
+
     </div>
 </template>
 
 <script>
 import { fetchList } from "@/api/user";
-import { fetchCourseList } from "@/api/column";
+import { fetchCourseList, createSelect, deleteSelection } from "@/api/column";
 import waves from "@/directive/waves";
 import { mapGetters } from "vuex";
 
@@ -127,10 +186,26 @@ export default {
             list: [],
             total: 0,
             listLoading: true,
+            currentSelectedCourse: null,
             listQuery: {
               keyword: undefined,
               selectedCourse: course_id,
             },
+            dialogFormVisible: false,
+            listLoading: true,
+            rules: {
+                  user_id: [
+                    {
+                      required: true,
+                      message: "用户序号不能为空",
+                      trigger: "blur",
+                    },
+                  ],
+              },
+              temp: {
+                  user_id: undefined,
+              },
+          dialogBtnLoading: false,
         };
     },
   computed: {
@@ -148,6 +223,7 @@ export default {
             console.log(e.target.value);
         },
         getCourseList() {
+            this.currentSelectedCourse = course_id;
             this.listLoading = true;
             fetchCourseList(this.id).then((response) => {
                 this.courseList = response.data;
@@ -155,6 +231,7 @@ export default {
             });
         },
         handleFilter() {
+            this.currentSelectedCourse = this.listQuery.selectedCourse;
           this.getList();
         },
         getList() {
@@ -168,8 +245,60 @@ export default {
         openInfo(id) {
             console.log(id);
         },
+        resetTemp() {
+              this.temp = {
+                  user_id: undefined,
+              };
+            },
+        handleCreate() {
+            this.resetTemp();
+            this.dialogFormVisible = true;
+          },
+          createData() {
+              this.$refs["dataForm"].validate((valid) => {
+                  if (valid) {
+                      this.dialogBtnLoading = true;
+                      const tempData = {
+                          user: this.temp.user_id,
+                          course: this.listQuery.selectedCourse,
+                      };
+                      createSelect(tempData)
+                      .then(() => {
+                          this.dialogFormVisible = false;
+                          this.$notify({
+                            title: "成功",
+                            message: "课程添加学生成功",
+                            type: "success",
+                            duration: 2000,
+                          });
+                          this.getList();
+                      })
+                      .finally(() => {
+                        this.dialogBtnLoading = false;
+                      });
+                  }
+              });
+          },
+        handleDelete(row, index) {
+            this.listLoading = true;
+            deleteSelection({
+              user: row.id,
+              course: this.listQuery.selectedCourse,
+            })
+            .then((response) => {
+              this.$notify({
+                title: "提示",
+                message: "删除成功",
+                type: "success",
+                duration: 2000,
+              });
+              this.list.splice(index, 1);
+            })
+            .finally(() => {
+              this.listLoading = false;
+            });
+        }
     },
-
 };
 
 </script>

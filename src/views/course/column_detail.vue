@@ -32,7 +32,6 @@
             </div>
             </div>
     </el-card>
-
     <div
       class="filter-container"
       style="display: flex; justify-content: space-between; margin-top: 20px"
