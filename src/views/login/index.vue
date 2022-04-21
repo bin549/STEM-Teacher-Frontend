@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">教师端登录</h3>
       </div>
       <el-form-item prop="username">
         <span class="svg-container">
@@ -68,7 +68,7 @@
               <el-button
                 type="primary"
               >
-                切换<a href="http://47.106.92.143/log-in">学生</a>页面
+                <a href="http://47.106.92.143/log-in">切换学生端</a>
               </el-button>
           </span>
         </div>

@@ -1,40 +1,61 @@
 <template>
   <div class="app-container">
+      <BaseDialog
+        :show="!!serialNumber"
+        title="课程序列号"
+        :content="serialNumber"
+        @close="handleSerialNumberVisible"
+      ></BaseDialog>
+
     <div
       class="filter-container"
-      style="display: flex; justify-content: space-between"
+      style="display: flex; justify-content: space-between;"
     >
     <el-button
       class="filter-item"
-      style="margin-left: 10px"
+      style="margin-left: 10px;"
       type="primary"
       icon="el-icon-edit"
       @click="handleCreate"
     >
       新增专栏
     </el-button>
-    <!-- <div>
+    <div>
       <el-select
-        v-model="listQuery.status"
-        placeholder="商品状态"
+        v-model="listQuery.genre"
+        placeholder="课程类型"
         clearable
-        style="width: 90px; margin-right: 10px"
+        style="width: 120px; margin-right: 10px"
         class="filter-item"
       >
         <el-option
-          v-for="(item, k) in statusOptions"
-          :key="k"
-          :label="item"
-          :value="k"
+          v-for="(item, k) in genresList"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
           />
         </el-select>
-        <el-input
+          <el-select
+            v-model="listQuery.status"
+            placeholder="是否上架"
+            clearable
+            style="width: 120px; margin-right: 10px"
+            class="filter-item"
+          >
+            <el-option
+              v-for="(item, k) in statusList"
+              :key="k"
+              :label="item"
+              :value="k"
+              />
+            </el-select>
+        <!-- <el-input
           v-model="listQuery.title"
           placeholder="标题"
           style="width: 200px"
           class="filter-item"
           @keyup.enter.native="handleFilter"
-        />
+        /> -->
         <el-button
           v-waves
           class="filter-item"
@@ -45,9 +66,8 @@
           搜索
         </el-button>
     </el-select>
-  </div> -->
   </div>
-
+  </div>
   <el-table
     :key="tableKey"
     v-loading="listLoading"
@@ -70,7 +90,7 @@
       <span>{{ $index +1 }}</span>
     </template>
   </el-table-column>
-  <el-table-column label="专栏内容" min-width="180px">
+  <el-table-column label="专栏内容" min-width="250px">
     <template slot-scope="{ row }">
       <div style="display: flex">
         <img
@@ -89,7 +109,7 @@
       </div>
     </template>
   </el-table-column>
-  <el-table-column label="内容" min-width="180px">
+  <el-table-column label="内容" min-width="340px">
     <template slot-scope="{ row }">
     <div
       style="
@@ -102,7 +122,22 @@
     </div>
     </template>
   </el-table-column>
-  <el-table-column label="状态" class-name="status-col" width="100">
+  <el-table-column label="类型" min-width="88px">
+    <template slot-scope="{ row }">
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      "
+    >
+    <el-tag type="info">
+        <span>{{ row.genre | genreNameFilter }}</span>
+    </el-tag>
+    </div>
+    </template>
+  </el-table-column>
+  <el-table-column label="状态" class-name="status-col" width="80">
     <template slot-scope="{ row }">
       <el-tag :type="row.is_visible ? 'success' : 'danger'">
         {{ row.is_visible | statusFilter }}
@@ -110,7 +145,7 @@
     </template>
   </el-table-column>
 
-  <el-table-column label="创建时间" width="150px" align="center">
+  <el-table-column label="创建时间" width="170px" align="center">
     <template slot-scope="{ row }">
         <span>{{
           row.created_time | parseTime("{y}-{m}-{d} {h}:{i}:{s}")
@@ -121,7 +156,7 @@
   <el-table-column
     label="操作"
     align="center"
-    width="300"
+    width="230"
     class-name="small-padding fixed-width"
   >
         <template slot-scope="{ row, $index }">
@@ -158,30 +193,30 @@
             </el-popconfirm>
         </template>
 </el-table-column>
-
-<el-table-column
-  label="操作"
-  align="center"
-  width="300"
-  class-name="small-padding fixed-width"
->
+    <el-table-column
+      label="操作"
+      align="center"
+      width="230"
+      class-name="small-padding fixed-width"
+    >
       <template slot-scope="{ row, $index }">
           <el-button type="warning" size="mini" @click="openDetail(row)">
             目录
           </el-button>
-          <el-button type="success" size="mini" @click="openDetail(row)">
-            Student
+          <el-button type="success" size="mini" @click="checkStudent(row)">
+            学生名单
           </el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            serial_number
+          <el-button type="primary" size="mini" @click="showSerialNumber(row)">
+            序列号
           </el-button>
       </template>
 </el-table-column>
 </el-table>
+
 <el-dialog
-  fullscreen
   :title="textMap[dialogStatus]"
   :visible.sync="dialogFormVisible"
+  v-loading="listLoading"
 >
 <el-form
   ref="dataForm"
@@ -189,20 +224,23 @@
   :model="temp"
   label-position="left"
   label-width="70px"
-  style="width: 400px; margin-left: 50px"
+  style="margin-left: 50px;"
 >
-<el-form-item label="专栏标题" prop="title">
-  <el-input v-model="temp.title" />
+<el-form-item label="课程标题" label-width="80px" prop="title">
+  <el-input v-model="temp.title"/>
 </el-form-item>
-<el-form-item label="封面">
+<el-form-item label="课程封面">
   <el-upload
-    :action="uploadOptions.action"
+    action="#"
     :headers="uploadOptions.headers"
+    :http-request="uploadHttpRequest"
     list-type="picture-card"
+    :auto-upload="true"
     :on-preview="handlePictureCardPreview"
     :on-remove="handleUploadRemove"
     :on-success="handleUploadSuccess"
     :fileList="fileList"
+    :limit=1
   >
     <i class="el-icon-plus"></i>
   </el-upload>
@@ -210,15 +248,29 @@
     <img width="100%" :src="dialogImageUrl" alt="" />
   </el-dialog>
 </el-form-item>
-<el-form-item label="专栏介绍" prop="description">
+<el-form-item label="课程介绍" label-width="80px" prop="description">
   <el-input
     type="textarea"
     :rows="3"
-    placeholder="请输入专栏介绍"
+    placeholder="请输入课程介绍"
     v-model="temp.description"
   >
-    /</el-input
-  >
+    /</el-input>
+</el-form-item>
+<el-form-item label="课程类型" label-width="80px" prop="genre">
+    <el-select
+      v-model="temp.genre"
+      placeholder="请选择课程类型"
+      clearable
+      class="filter-item"
+    >
+      <el-option
+        v-for="(item, k) in genresList"
+        :key="item.id"
+        :label="item.name"
+        :value="item.id"
+      />
+    </el-select>
 </el-form-item>
 </el-form-item>
 <el-form-item label="状态">
@@ -228,7 +280,7 @@
   </el-radio-group>
 </el-form-item>
 </el-form>
-<div slot="footer" class="dialog-footer">
+<div slot="footer" >
   <el-button @click="dialogFormVisible = false"> 取消 </el-button>
   <el-button
     type="primary"
@@ -248,42 +300,68 @@ import {
   createCourse,
   deleteCourse,
   updateStatus,
+  fetchGenresList,
 } from "@/api/column";
 import { parseTime, uploadOptions } from "@/utils";
 import { mapGetters } from "vuex";
+import BaseDialog from '@/components/ui/BaseDialog.vue';
+import axios from "axios";
+import waves from "@/directive/waves";
+
 
 const statusOptions = {
   0: "已下架",
   1: "已上架",
 };
 
+const genresOptions = {
+    "40db5aa7-ec55-429f-bfbc-f192b688e1c4": "社会科学",
+    "869d268e-09f6-4177-96b4-585707e85545": "人文科学",
+    "569d268e-09f6-4177-96b4-585707e85545": "自然科学",
+    "169d268e-09f6-4177-96b4-585707e85545": "生命科学",
+};
+
 export default {
     name: "column",
+    inject: ["reload"],
     filters: {
       statusFilter(status) {
         return statusOptions[status ? 1 : 0];
       },
+        genreNameFilter(status) {
+          return genresOptions[status];
+        },
     },
+
+  components: {
+    BaseDialog,
+  },
+  directives: {
+    waves,
+  },
   data() {
     return {
+        serialNumber: null,
         dialogBtnLoading: false,
-  listLoading: true,
-      tableKey: 0,
-      list: null,
-      uploadOptions,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        status: undefined,
-        title: undefined,
-        sort: "-id",
-      },
+        listLoading: true,
+        tableKey: 0,
+        list: null,
+        uploadOptions,
+        listQuery: {
+            page: 1,
+            limit: 20,
+            status: undefined,
+            title: undefined,
+            sort: "-id",
+            genre: null,
+          },
       temp: {
-        id: undefined,
-        title: "",
-        status: 1,
-        description: "",
-        cover: "",
+          id: undefined,
+          title: "",
+          status: null,
+          description: "",
+          cover: "",
+          genre: null,
       },
       dialogStatus: "",
       dialogFormVisible: false,
@@ -305,40 +383,83 @@ export default {
             message: "内容不能为空",
             trigger: "blur",
           },
-        ],
+      ],
+            genre: [
+              {
+                required: true,
+                message: "类型不能为空",
+                trigger: "blur",
+              },
+                ],
             },
-    dialogImageUrl: "",
-    dialogVisible: false,
-    fileList: [],
+        dialogImageUrl: "",
+        dialogVisible: false,
+        fileList: [],
+        genresList: [],
+        statusList: ['已下架', '已上架'],
 };
   },
   created() {
+      this.getGenresList();
     this.getList();
   },
   computed: {
     ...mapGetters(["id"]),
   },
     methods: {
+        getGenresList() {
+          this.listLoading = true;
+          fetchGenresList().then((response) => {
+            this.genresList = response.data;
+            for (var genre in this.genresList) {
+                genresOptions[this.genresList[genre].id] = this.genresList[genre].name
+            }
+            this.listLoading = false;
+            });
+        },
+        uploadHttpRequest(param) {
+            this.listLoading = true;
+            let formData = new FormData();
+            formData.append("file", param.file);
+            axios.post(this.uploadOptions.action, formData).then((response) => {
+                this.temp.cover = response.data["name"];
+                this.$message({
+                  message: "操作成功",
+                  type: "success",
+                });
+            }).finally(() => {
+            this.listLoading = false;
+          });
+          ;
+        },
+    showSerialNumber(data) {
+      this.serialNumber = data.serial_number.toString();
+      this.serialNumberIsShow = true;
+    },
+    handleSerialNumberVisible() {
+      this.serialNumber = null;
+    },
       getList() {
         this.listLoading = true;
-        fetchList(this.id).then((response) => {
+        this.listQuery.id = this.id;
+        fetchList(this.listQuery).then((response) => {
           this.list = response.data;
           this.total = response.data.length;
           this.listLoading = false;
       });
       },
       handleFilter() {
-          this.listQuery.page = 1;
+          // this.listQuery.page = 1;
           this.getList();
         },
         resetTemp() {
               this.temp = {
                   id: undefined,
                   title: "",
-                  status: 1,
+                  status: null,
                   description: "",
                   cover: "",
-                  genre: 0,
+                  genre: null,
               };
             },
     handleCreate() {
@@ -375,7 +496,7 @@ export default {
           });
       },
       handleModifyStatus(row, status) {
-        this.listLoading = true;
+          this.listLoading = true;
           updateStatus({
             id: row.id,
             status,
@@ -385,8 +506,7 @@ export default {
               message: "操作成功",
               type: "success",
             });
-            row.status = status;
-            console.log(row.status);
+            row.is_visible = status;
           })
           .finally(() => {
               this.listLoading = false;
@@ -407,7 +527,6 @@ export default {
             this.$refs["dataForm"].clearValidate();
       });
       },
-
       openDetail(row) {
        this.$router.push({
          name: "ColumnDetail",
@@ -416,10 +535,9 @@ export default {
          },
        });
      },
-
      handlePictureCardPreview(file) {
-       // this.dialogImageUrl = file.url;
-       // this.dialogVisible = true;
+       this.dialogImageUrl = file.url;
+       this.dialogVisible = true;
      },
      handleUploadSuccess(response, file, fileList) {
        // if (response.msg == "fail") {
@@ -437,48 +555,40 @@ export default {
      handleRemove(file, fileList) {
        console.log(file, fileList);
      },
-
+     checkStudent(row) {
+          this.$router.push({
+            name: "Student",
+            query: {
+              id: row.id,
+            },
+          });
+     },
      handleUploadRemove(file, fileList) {
      },
-
         createData() {
           this.$refs["dataForm"].validate((valid) => {
             if (valid) {
               this.dialogBtnLoading = true;
               this.temp["owner"] = this.id;
-              this.temp["genre"] = "869d268e-09f6-4177-96b4-585707e85545";
-              this.temp["cover"] = "FOJ-s2iUcAEKe2-.png";
+              this.temp["genre"] = this.temp.genre;
+              this.temp["cover"] = this.temp.cover;
               createCourse(this.temp)
               .then(() => {
                   this.dialogFormVisible = false;
                   this.$notify({
-                    title: "Success",
-                    message: "Created Successfully",
+                    title: "成功",
+                    message: "创建课程成功",
                     type: "success",
                     duration: 2000,
                   });
+                  this.reload();
               })
               .finally(() => {
                 this.dialogBtnLoading = false;
               });
-          //     createColumn(this.temp)
-          //       .then(() => {
-          //         this.getList();
-          //         this.dialogFormVisible = false;
-          //         this.$notify({
-          //           title: "Success",
-          //           message: "Created Successfully",
-          //           type: "success",
-          //           duration: 2000,
-          //         });
-          //       })
-          //       .finally(() => {
-          //         this.dialogBtnLoading = false;
-          //       });
             }
           });
         },
-
         updateData() {
           // this.$refs["dataForm"].validate((valid) => {
           //   if (valid) {

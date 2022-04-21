@@ -9,6 +9,23 @@ export function fetchList(query) {
   })
 }
 
+export function fetchGenresList(query) {
+    return axios({
+      url: '/api/getGenres/',
+      method: 'get',
+      params: query
+  })
+}
+
+
+export function fetchCourseList(query) {
+    return axios({
+      url: '/api/getCourseByUserId/',
+      method: 'get',
+      params: query
+  })
+}
+
 export function fetchCourseDetail(query) {
     console.log(query);
     return axios({

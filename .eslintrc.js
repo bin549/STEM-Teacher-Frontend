@@ -39,8 +39,8 @@ module.exports = {
     }],
     'comma-dangle': 'off',
     'comma-spacing': [2, {
-      'before': false,
-      'after': true 
+      'before': false, 
+      'after': true
     }],
     'comma-style': [2, 'last'],
     'constructor-super': 2,

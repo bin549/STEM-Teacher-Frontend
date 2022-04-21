@@ -87,7 +87,6 @@
   </div>
   </template>
 </el-table-column>
-
       <el-table-column
         label="操作"
         align="center"
@@ -101,8 +100,6 @@
             </el-button>
         </template>
     </el-table-column>
-
-
 </el-table>
 </div>
 </template>

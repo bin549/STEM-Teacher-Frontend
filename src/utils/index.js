@@ -2,10 +2,10 @@ import { getToken } from '@/utils/auth'
 
 
 export let uploadOptions = {
-  action: process.env.VUE_APP_BASE_API + '/admin/s/upload',
+  action: process.env.VUE_APP_BASE_API + '/api/upload/',
   importExcelAction: process.env.VUE_APP_BASE_API + "/admin/s/importexcel",
   headers: {
-    token: getToken(),
+      token: getToken(),
   }
 }
 
