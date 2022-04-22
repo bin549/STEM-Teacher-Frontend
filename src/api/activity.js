@@ -49,3 +49,11 @@ export function fetchExecutionHomework(query) {
       params: query
   })
 }
+
+export function createAssignment(query) {
+    return axios({
+      url: '/api/createAssignment/',
+      method: 'post',
+      params: query
+  })
+}

@@ -10,6 +10,7 @@
       type="primary"
       icon="el-icon-edit"
       @click="handleCreate"
+      v-if="currentSelectedCourse != null"
     >
       新建活动
     </el-button>
@@ -134,17 +135,52 @@
         </template>
     </el-table-column>
 </el-table>
+
+<el-dialog
+  :title="textMap[dialogStatus]"
+  :visible.sync="dialogFormVisible"
+  v-loading="listLoading"
+>
+<el-form
+  ref="dataForm"
+  :rules="rules"
+  :model="temp"
+  label-position="left"
+  label-width="70px"
+  style="margin-left: 50px;"
+>
+<el-form-item label="活动标题" label-width="80px" prop="title">
+  <el-input v-model="temp.title"/>
+</el-form-item>
+<el-form-item label="活动介绍" label-width="80px" prop="description">
+  <tinymce v-model="temp.content" :height="300" :width="600" />
+</el-form-item>
+</el-form>
+<div slot="footer" >
+  <el-button @click="dialogFormVisible = false"> 取消 </el-button>
+  <el-button
+    type="primary"
+    @click="dialogStatus === 'create' ? createData() : updateData()"
+    :loading="dialogBtnLoading"
+  >
+    {{ dialogBtnLoading ? "提交中..." : "提交" }}
+  </el-button>
+</div>
+</el-dialog>
+
     </div>
 </template>
 
 <script>
 import {
     fetchAssignment,
+    createAssignment,
 } from "@/api/activity";
 import { fetchCourseList } from "@/api/column";
 import waves from "@/directive/waves";
 import { parseTime } from "@/utils";
 import { mapGetters } from "vuex";
+import Tinymce from "@/components/Tinymce";
 
 let course_id = null;
 
@@ -153,6 +189,9 @@ export default {
       course_id = to.query.id;
       next();
     },
+  components: {
+    Tinymce,
+  },
     data() {
         return {
             courseList: [],
@@ -165,6 +204,34 @@ export default {
                 page: 1,
                 selectedCourse: course_id,
             },
+            dialogStatus: "",
+            textMap: {
+                update: "修改",
+                create: "新增",
+              },
+
+              rules: {
+                    title: [
+                      {
+                        required: true,
+                        message: "标题不能为空",
+                        trigger: "blur",
+                      },
+                    ],
+                      content: [
+                        {
+                          required: true,
+                          message: "内容不能为空",
+                          trigger: "blur",
+                      },
+                    ],
+                  },
+                  temp: {
+              title: "",
+              content: "",
+              },
+            dialogFormVisible: false,
+              dialogBtnLoading: false,
         };
     },
     computed: {
@@ -201,11 +268,46 @@ export default {
           this.currentSelectedCourse = this.listQuery.selectedCourse;
           this.getList();
       },
+      resetTemp() {
+        this.temp = {
+            title: "",
+            content: "",
+        };
+      },
       handleCreate() {
-          this.listLoading = true;
+          this.resetTemp();
+          this.dialogStatus = "create";
+          this.dialogFormVisible = true;
+
       },
       getSortClass() {},
       handleUpdate() {},
+
+    createData() {
+          this.$refs["dataForm"].validate((valid) => {
+            if (valid) {
+              this.dialogBtnLoading = true;
+              this.temp["course"] = this.currentSelectedCourse;
+              createAssignment(this.temp)
+                .then(() => {
+                  this.dialogFormVisible = false;
+                  this.$notify({
+                    title: "成功",
+                    message: "创建活动成功",
+                    type: "success",
+                    duration: 2000,
+                  });
+                })
+                .finally(() => {
+                  this.dialogBtnLoading = false;
+                  this.reload();
+                  this.reload();
+                  this.reload();
+                  this.reload();
+                });
+            }
+          });
+    },
 
     checkAssignment(row) {
          this.$router.push({
@@ -215,6 +317,17 @@ export default {
            },
          });
        },
+
+
+           reload(row) {
+                this.$router.push({
+                  name: "Education",
+                  query: {
+                    id: currentSelectedCourse,
+                  },
+                });
+              },
+
     },
 };
 

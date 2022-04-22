@@ -1,5 +1,7 @@
 <template>
   <div class="user-activity">
+
+
     <div class="post">
       <div class="user-block">
         <img
@@ -19,6 +21,8 @@
         for everyone from bacon lovers to Charlie Sheen fans.
       </p>
     </div>
+
+
     <div class="post">
       <div class="user-block">
         <img
@@ -92,6 +96,7 @@ const avatarPrefix = "?imageView2/1/w/80/h/80";
 const carouselPrefix = "?imageView2/2/h/440";
 
 export default {
+
   data() {
     return {
       carouselImages: [
@@ -104,6 +109,8 @@ export default {
       carouselPrefix,
     };
   },
+
+
 };
 </script>
 
