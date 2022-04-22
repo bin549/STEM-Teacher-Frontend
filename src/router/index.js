@@ -49,18 +49,6 @@ export const constantRoutes = [
       }
     ]
   },
-  // {
-  //   path: '/documentation',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/documentation/index'),
-  //       name: 'Documentation',
-  //       meta: { title: 'Documentation', icon: 'documentation', affix: true }
-  //     }
-  //   ]
-  // },
   {
     path: '/profile',
     component: Layout,
@@ -86,7 +74,7 @@ export const asyncRoutes = [
     alwaysShow: true,
     meta: {
         title: "课程",
-        icon: "excel",
+        icon: "education",
         roles: ['admin', 'editor']
     },
     children: [{
@@ -116,15 +104,6 @@ export const asyncRoutes = [
             title: "图文"
         }
     },
-    // {
-    //     path: "audio",
-    //     name: "Audio",
-    //     component: () =>
-    //         import('@/views/course/audio'),
-    //     meta: {
-    //         title: "音频"
-    //     }
-    // },
     {
         path: "video",
         name: "Video",
@@ -141,7 +120,7 @@ export const asyncRoutes = [
       path: '/activity',
       component: Layout,
       redirect: "/activity/assignment",
-      name: "Assignment",
+      name: "education",
       alwaysShow: true,
       meta: {
           title: "活动",
@@ -157,12 +136,21 @@ export const asyncRoutes = [
               title: "活动"
           }
       }, {
+          hidden: true,
           path: "execution",
           name: "Execution",
           component: () =>
                 import('@/views/activity/execution'),
           meta: {
               title: "执行情况"
+          }
+      },{
+          path: "center",
+          name: "Center",
+          component: () =>
+                import('@/views/activity/center'),
+          meta: {
+              title: "展示中心"
           }
       },
       ]
@@ -175,11 +163,10 @@ export const asyncRoutes = [
               path: 'index',
               component: () => import('@/views/student/index'),
               name: 'Student',
-              meta: { title: '学生', icon: 'icon', noCache: true }
+              meta: { title: '学生', icon: 'peoples', noCache: true }
             }
           ]
         },
-
       {
         path: '/notifications',
         component: Layout,

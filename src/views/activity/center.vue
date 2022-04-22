@@ -2,13 +2,12 @@
   <div class="app-container">
     <div v-if="user">
       <el-row :gutter="20">
-        <el-col :span="6" :xs="24">
-          <user-card :user="user" />
+        <el-col :span="13" :xs="24">
+            <activity />
         </el-col>
-        <el-col :span="18" :xs="24">
+        <el-col :span="11" :xs="24">
           <el-card>
-              <account :user="user" />
-            </el-tabs>
+              <timeline />
           </el-card>
         </el-col>
       </el-row>
@@ -18,16 +17,15 @@
 
 <script>
 import { mapGetters } from "vuex";
-import UserCard from "./components/UserCard";
-import Account from "./components/Account";
+import Activity from "./components/Activity";
+import Timeline from "./components/Timeline";
 
 export default {
-  name: "Profile",
-  components: { UserCard, Account },
+  name: "center",
+  components: { Activity, Timeline },
   data() {
     return {
       user: {},
-      activeTab: "activity",
     };
   },
   computed: {

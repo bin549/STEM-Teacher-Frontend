@@ -232,7 +232,7 @@ export default {
         },
         handleFilter() {
             this.currentSelectedCourse = this.listQuery.selectedCourse;
-          this.getList();
+            this.getList();
         },
         getList() {
             this.listLoading = true;

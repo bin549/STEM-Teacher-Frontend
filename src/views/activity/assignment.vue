@@ -11,8 +11,36 @@
       icon="el-icon-edit"
       @click="handleCreate"
     >
-      创建
+      新建活动
     </el-button>
+    <div>
+    <el-select
+      v-model="listQuery.selectedCourse"
+      placeholder="所选课程"
+      clearable
+      style="width:32rem; margin-right: 1rem;"
+      class="filter-item"
+    >
+      <el-option
+        v-for="(item, k) in courseList"
+        :key="item.id"
+        :label="item.title"
+        :value="item.id"
+      />
+    </el-select>
+</div>
+<div>
+    <el-button
+      v-waves
+      class="filter-item"
+      type="primary"
+      icon="el-icon-search"
+      style="float: right; margin-right: 3rem;"
+      @click="handleFilter"
+    >
+      搜索
+    </el-button>
+</div>
 </div>
 
 <el-table
@@ -88,7 +116,7 @@
 
         <template slot-scope="{ row, $index }">
             <el-button type="warning" size="mini" @click="openDetail(row)">
-              目录
+              检查
             </el-button>
             <el-button type="primary" size="mini" @click="handleUpdate(row)">
               编辑
@@ -111,39 +139,66 @@
     </div>
 </template>
 
-
-
 <script>
 import {
     fetchAssignment,
 } from "@/api/activity";
-
+import { fetchCourseList } from "@/api/column";
+import waves from "@/directive/waves";
 import { parseTime } from "@/utils";
+import { mapGetters } from "vuex";
+
+let course_id = null;
 
 export default {
+    beforeRouteEnter(to, from, next) {
+      course_id = to.query.id;
+      next();
+    },
     data() {
         return {
+            courseList: [],
             tableKey: 0,
             list: null,
             total: 0,
             listLoading: true,
+            currentSelectedCourse: null,
             listQuery: {
                 page: 1,
+                selectedCourse: course_id,
             },
         };
     },
+    computed: {
+      ...mapGetters(["id"]),
+    },
+    directives: {
+      waves,
+    },
       created() {
+          this.getCourseList();
         this.getList();
       },
     methods: {
+        getCourseList() {
+        this.currentSelectedCourse = course_id;
+        this.listLoading = true;
+        fetchCourseList(this.id).then((response) => {
+            this.courseList = response.data;
+            this.listLoading = false;
+        });
+    },
       getList() {
             this.listLoading = true;
             fetchAssignment(this.listQuery).then((response) => {
             this.list = response.data;
             this.total = response.data.length;
-            console.log(this.list);
             this.listLoading = false;
         });
+      },
+      handleFilter() {
+          this.currentSelectedCourse = this.listQuery.selectedCourse;
+          this.getList();
       },
       handleCreate() {
           this.listLoading = true;

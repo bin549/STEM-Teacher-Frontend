@@ -16,3 +16,11 @@ export function fetchExecution(query) {
       params: query
   })
 }
+
+export function updateStatus(data) {
+    return axios({
+        url: '/api/updateStatus/',
+        method: 'put',
+        data
+    })
+}

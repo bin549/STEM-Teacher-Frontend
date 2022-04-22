@@ -77,7 +77,6 @@ export function fetchCourseLectures(query) {
 }
 
 
-
 export function createSelect(data) {
     return axios({
         url: '/api/createSelect/',

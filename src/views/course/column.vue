@@ -122,7 +122,7 @@
     </div>
     </template>
   </el-table-column>
-  <el-table-column label="类型" min-width="88px">
+  <el-table-column label="类型" min-width="54px">
     <template slot-scope="{ row }">
     <div
       style="
@@ -156,10 +156,14 @@
   <el-table-column
     label="操作"
     align="center"
-    width="230"
+    width="220"
+    class="operation-group"
     class-name="small-padding fixed-width"
   >
         <template slot-scope="{ row, $index }">
+            <el-button type="warning" size="mini" @click="prewviewCourse(row)">
+              预览
+           </el-button>
             <el-button type="primary" size="mini" @click="handleUpdate(row)">
               编辑
             </el-button>
@@ -200,13 +204,16 @@
       class-name="small-padding fixed-width"
     >
       <template slot-scope="{ row, $index }">
-          <el-button type="warning" size="mini" @click="openDetail(row)">
+          <el-button type="primary" size="mini" @click="checkActivity(row)">
+            活动
+          </el-button>
+            <el-button size="mini" @click="openDetail(row)">
             目录
           </el-button>
           <el-button type="success" size="mini" @click="checkStudent(row)">
             学生名单
           </el-button>
-          <el-button type="primary" size="mini" @click="showSerialNumber(row)">
+          <el-button type="warning" size="mini" @click="showSerialNumber(row)">
             序列号
           </el-button>
       </template>
@@ -316,10 +323,6 @@ const statusOptions = {
 };
 
 const genresOptions = {
-    "40db5aa7-ec55-429f-bfbc-f192b688e1c4": "社会科学",
-    "869d268e-09f6-4177-96b4-585707e85545": "人文科学",
-    "569d268e-09f6-4177-96b4-585707e85545": "自然科学",
-    "169d268e-09f6-4177-96b4-585707e85545": "生命科学",
 };
 
 export default {
@@ -624,7 +627,28 @@ export default {
             }
           });
         },
+        checkActivity(row) {
+             this.$router.push({
+               name: "Activity",
+               query: {
+                 id: row.id,
+               },
+             });
+         },
+         prewviewCourse(row) {
+             console.log(row);
+          },
+
     },
 };
 
 </script>
+
+<style lang="scss">
+    .el-button--mini
+    {
+        min-width: 32px !important;
+        margin-right: -8px;
+    }
+
+</style>
