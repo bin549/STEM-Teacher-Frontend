@@ -31,6 +31,17 @@
   搜索
 </el-button>
 
+<el-button
+  v-waves
+  class="filter-item"
+  type="info"
+  icon="el-icon-search"
+  style="float: right; margin-right: 3rem;"
+  @click="backPage"
+>
+  返回
+</el-button>
+
 </div>
 <el-table
   :key="tableKey"
@@ -102,7 +113,7 @@
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row, $index }">
-            <el-button type="warning" size="mini" v-if="row.finish_time==null" @click="checkExecution(row)" disabled>
+            <el-button type="warning" size="mini" v-if="row.finish_time==null" disabled>
               检查
             </el-button>
             <el-button type="warning" size="mini" v-if="row.finish_time!=null" @click="checkExecution(row)">
@@ -136,6 +147,67 @@
         </template>
     </el-table-column>
 </el-table>
+
+
+<el-dialog
+  title="Check"
+  :visible.sync="dialogFormVisible"
+  v-loading="listLoading"
+>
+{{execution_text}}
+<el-row>
+  <el-col
+    :span="8"
+    v-for="( {img_url, img_preview_url}, index ) of execution_image"
+    :key="index"
+    style="padding: 0"
+  >
+    <el-card shadow="hover">
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          cursor: pointer;
+        "
+      >
+      <el-image
+          style="width: 130px; height: 130px"
+          :src="img_url"
+          :preview-src-list="img_preview_url">
+        </el-image>
+      </div>
+    </el-card>
+  </el-col>
+</el-row>
+
+<el-form
+  ref="dataForm"
+  :rules="rules"
+  :model="temp"
+  label-position="left"
+  label-width="70px"
+  style="margin-left: 50px;"
+>
+<el-form-item label="Score" label-width="80px" prop="score">
+  <el-input v-model="temp.score"/>
+</el-form-item>
+
+
+</el-form>
+<div slot="footer" >
+  <el-button @click="dialogFormVisible = false"> 取消 </el-button>
+  <el-button
+    type="primary"
+    @click="updateScore()"
+    :loading="dialogBtnLoading"
+  >
+    {{ dialogBtnLoading ? "提交中..." : "提交" }}
+  </el-button>
+</div>
+</el-dialog>
+
+
 </div>
 </template>
 
@@ -143,7 +215,13 @@
 import {
     fetchExecution,
     updateStatus,
+    updateExecution,
+    fetchExecutionImage,
 } from "@/api/activity";
+
+import {
+    fetchCourseId,
+} from "@/api/column";
 
 import {
     fetchList,
@@ -161,21 +239,48 @@ const userNameOptions = {
 
 import { parseTime } from "@/utils";
 
+let assignment_id = null;
+
 export default {
   directives: {
     waves,
   },
+  beforeRouteEnter(to, from, next) {
+    assignment_id = to.query.id;
+    next();
+  },
+  inject: ["reload"],
     data() {
         return {
+            execution_text: "Hello World",
+          execution_image: [
+          ],
             tableKey: 0,
             list: null,
             total: 0,
             listLoading: true,
             listQuery: {
+                id: assignment_id,
                 page: 1,
             },
+            temp: {
+                score: 0,
+            },
+            rules: {
+                  score: [
+                    {
+                      required: true,
+                      message: "分数不能为空",
+                      trigger: "blur",
+                    },
+                  ],
+                },
             postStatus : ["Yes", "No"],
             studentsList: [],
+            dialogFormVisible: false,
+            listLoading: false,
+            dialogBtnLoading: false,
+            dialogStatus: false,
         };
     },
       created() {
@@ -208,13 +313,59 @@ export default {
                 this.total = response.data.length;
                 this.listLoading = false;
             });
-
         },
 
 getSortClass() {},
 
 checkExecution(row) {
-    console.log(row);
+    this.dialogFormVisible = true;
+    this.temp["id"] = row.id;
+    this.temp["mode"] = "check";
+   fetchExecution(this.temp)
+   .then((res) => {
+          this.execution_text = res.data["content_text"],
+       fetchExecutionImage({id:this.temp["id"]}).then((response) => {
+           let images = response.data;
+           this.execution_image = [];
+           for (var i = 0; i < images.length; i++) {
+               this.execution_image.push(
+                   { "img_url": images[i]["media"]},
+                   { "img_preview_url": [images[i]["media"]]}
+               )
+           }
+
+       })
+       // this.previewMedia = res.data["media"],
+       // this.previewFormat = formatOptions[res.data["format"]],
+     this.$message({
+       message: "操作成功",
+       type: "success",
+     });
+   })
+},
+
+
+ //
+ //    .finally(() => {
+ //        this.listLoading = false;
+ //      });
+ // },
+
+
+
+updateScore() {
+    this.listLoading = true;
+    this.temp["score"] = parseInt(this.temp["score"]);
+    updateExecution(this.temp).then((response) => {
+      this.$message({
+        message: "操作成功",
+        type: "success",
+      });
+    })
+    .finally(() => {
+        this.reload();
+        this.listLoading = false;
+      });
 },
 
 handleFilter() {},
@@ -235,8 +386,23 @@ handleExcellentStatus(row, status) {
     })
     .finally(() => {
         this.listLoading = false;
-      });
+      }
+  );
 },
+backPage() {
+    fetchCourseId({id: assignment_id, mode: "no"}).then((response) => {
+         this.$router.push({
+           name: "education",
+           query: {
+             id: response.data.id,
+           },
+         });
+    })
+
+
+
+},
+
       },
 
 };

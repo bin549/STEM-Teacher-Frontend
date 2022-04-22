@@ -225,7 +225,11 @@ export default {
         getCourseList() {
             this.currentSelectedCourse = course_id;
             this.listLoading = true;
-            fetchCourseList(this.id).then((response) => {
+            fetchCourseList(({
+              id: this.id,
+            })
+          )
+            .then((response) => {
                 this.courseList = response.data;
                 this.listLoading = false;
             });

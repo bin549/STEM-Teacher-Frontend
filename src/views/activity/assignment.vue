@@ -92,30 +92,28 @@
   </div>
   </template>
 </el-table-column>
-  <el-table-column label="创建时间" width="150px" align="center">
+  <el-table-column label="开始时间" width="150px" align="center">
     <template slot-scope="{ row }">
         <span>{{
           row.start_time | parseTime("{y}-{m}-{d} {h}:{i}:{s}")
         }}</span>
     </template>
   </el-table-column>
-    <el-table-column label="创建时间" width="150px" align="center">
+    <el-table-column label="结束时间" width="150px" align="center">
       <template slot-scope="{ row }">
           <span>{{
             row.start_time | parseTime("{y}-{m}-{d} {h}:{i}:{s}")
           }}</span>
       </template>
     </el-table-column>
-
       <el-table-column
         label="操作"
         align="center"
         width="300"
         class-name="small-padding fixed-width"
       >
-
         <template slot-scope="{ row, $index }">
-            <el-button type="warning" size="mini" @click="openDetail(row)">
+            <el-button type="warning" size="mini" @click="checkAssignment(row)">
               检查
             </el-button>
             <el-button type="primary" size="mini" @click="handleUpdate(row)">
@@ -183,7 +181,10 @@ export default {
         getCourseList() {
         this.currentSelectedCourse = course_id;
         this.listLoading = true;
-        fetchCourseList(this.id).then((response) => {
+        fetchCourseList(({
+          id: this.id,
+        })
+    ).then((response) => {
             this.courseList = response.data;
             this.listLoading = false;
         });
@@ -206,7 +207,7 @@ export default {
       getSortClass() {},
       handleUpdate() {},
 
-    openDetail(row) {
+    checkAssignment(row) {
          this.$router.push({
            name: "Execution",
            query: {

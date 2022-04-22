@@ -116,3 +116,29 @@ export function fetchFormatsList(query) {
       params: query
   })
 }
+
+export function setPreviewLecture(query) {
+    return axios({
+      url: '/api/setPreviewLecture/',
+      method: 'put',
+      params: query
+  })
+}
+
+
+export function fetchPreviewLecture(query) {
+    return axios({
+      url: '/api/getPreviewLecture/',
+      method: 'get',
+      params: query
+  })
+}
+
+
+export function fetchCourseId(query) {
+    return axios({
+      url: '/api/getCourseId/',
+      method: 'get',
+      params: query
+  })
+}

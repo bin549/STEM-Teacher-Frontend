@@ -73,8 +73,8 @@
             <div style="display: flex">
               <img
                 :src="row.media"
-                style="width: 100px; height: 50px; margin-right: 10px"
-                @click="previewLecture(row.media)"
+                class="pre-image"
+                @click="previewLecture(row.media, row.format)"
               />
                 <div
                   style="
@@ -103,12 +103,24 @@
               }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="可预览" class-name="status-col" width="100">
-          <template slot-scope="{ row }">
-            <el-tag :type="row.is_preview ? 'success' : 'info'">
-              {{ row.is_preview | statusFilter }}
-            </el-tag>
-          </template>
+        <el-table-column label="预览设定" class-name="status-col" width="100">
+            <template slot-scope="{ row, $index }">
+            <el-button
+              v-if="row.is_preview"
+              size="mini"
+              type="success"
+              disabled
+            >
+              当前预览
+            </el-button>
+            <el-button
+              v-if="!row.is_preview"
+              size="mini"
+              @click="handlePreviewStatus(row)"
+            >
+              设为预览
+            </el-button>
+        </template>
         </el-table-column>
         <el-table-column
           label="操作"
@@ -117,6 +129,7 @@
           class-name="small-padding fixed-width"
         >
           <template slot-scope="{ row, $index }">
+
             <el-popconfirm
               title="是否要删除该记录？"
               @onConfirm="handleDelete(row, $index)"
@@ -230,7 +243,8 @@
               </div>
             </el-dialog>
             <el-dialog :visible.sync="previewDialogVisible">
-              <img width="100%" :src="previewMedia" alt="" />
+              <img width="100%" :src="previewMedia" alt="" v-if="previewFormat == 'Photo'"/>
+              <VideoPlayer :src="previewMedia" v-if="previewFormat == 'Video'"></VideoPlayer>
             </el-dialog>
     </div>
 
@@ -257,8 +271,10 @@ import {
   fetchFormatsList,
   createLecture,
   deleteLecture,
+  setPreviewLecture,
 } from "@/api/column.js";
 import axios from "axios";
+import VideoPlayer from "@/components/course/VideoPlayer.vue";
 
 import Sortable from "sortablejs";
 import { parseTime, uploadOptions } from "@/utils";
@@ -268,6 +284,9 @@ export default {
     beforeRouteEnter(to, from, next) {
           id = to.query.id;
           next();
+        },
+        components: {
+          VideoPlayer,
         },
   filters: {
     statusFilter(status) {
@@ -327,6 +346,7 @@ export default {
           uploadOptions,
           previewDialogVisible: false,
           previewMedia: "",
+          previewFormat: "",
         };
     },
   created() {
@@ -342,7 +362,6 @@ export default {
             method: 1,
           })
         ).then((response) => {
-            console.log(response.data);
                 this.detail = response.data;
             })
             .finally(() => {
@@ -415,9 +434,10 @@ export default {
               this.listLoading = false;
             });
       },
-      previewLecture(media) {
+      previewLecture(media, format) {
           this.previewDialogVisible = true;
           this.previewMedia = media;
+          this.previewFormat = formatOptions[format];
       },
       createData() {
           this.$refs["dataForm"].validate((valid) => {
@@ -459,18 +479,35 @@ export default {
             this.listLoading = false;
           });
       },
+      handlePreviewStatus(row) {
+          this.listLoading = true;
+          setPreviewLecture({
+            id: row.id,
+            update: "status",
+          })
+          .then((res) => {
+            this.$message({
+              message: "操作成功",
+              type: "success",
+            });
+            // row.is_preview = true;
+          })
+          .finally(() => {
+              this.reload();
+              this.listLoading = false;
+            });
+      },
+
   },
 };
 </script>
 
-<style>
+<style scoped lang="scss">
 .sortable-ghost {
   opacity: 0.8;
   color: #fff !important;
   background: #42b983 !important;
 }
-</style>
-<style scoped>
 .icon-star {
   margin-right: 2px;
 }
@@ -485,6 +522,16 @@ export default {
 
 .v-modal {
 z-index: 10 !important;
+}
+.pre-image {
+    width: 100px;
+    height: 50px;
+    margin-right: 10px;
+    &:hover {
+        box-shadow: 0 26px 40px -24px rgba(0, 36, 100, 0.3);
+        opacity: 0.6;
+        cursor: pointer;
+    }
 }
 
 </style>

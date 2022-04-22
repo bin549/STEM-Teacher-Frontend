@@ -73,7 +73,7 @@ export const asyncRoutes = [
     name: "Course",
     alwaysShow: true,
     meta: {
-        title: "课程",
+        title: "课程管理",
         icon: "education",
         roles: ['admin', 'editor']
     },
@@ -123,7 +123,7 @@ export const asyncRoutes = [
       name: "education",
       alwaysShow: true,
       meta: {
-          title: "活动",
+          title: "活动管理",
           icon: "excel",
           roles: ['admin', 'editor']
       },
@@ -163,36 +163,37 @@ export const asyncRoutes = [
               path: 'index',
               component: () => import('@/views/student/index'),
               name: 'Student',
-              meta: { title: '学生', icon: 'peoples', noCache: true }
+              meta: { title: '学生管理', icon: 'peoples', noCache: true }
             }
           ]
         },
-      {
-        path: '/notifications',
-        component: Layout,
-        children: [
-          {
-            path: 'index',
-            component: () => import('@/views/notifications/index'),
-            name: 'Notifications',
-            meta: { title: '公告', icon: 'icon', noCache: true }
-          }
-        ]
-      },
+
+      // {
+      //   path: '/notifications',
+      //   component: Layout,
+      //   children: [
+      //     {
+      //       path: 'index',
+      //       component: () => import('@/views/notifications/index'),
+      //       name: 'Notifications',
+      //       meta: { title: '公告', icon: 'icon', noCache: true }
+      //     }
+      //   ]
+      // },
 
 
-  {
-    path: '/icon',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/icons/index'),
-        name: 'Icons',
-        meta: { title: 'Icons', icon: 'icon', noCache: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/icon',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/icons/index'),
+  //       name: 'Icons',
+  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
+  //     }
+  //   ]
+  // },
 
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -24,3 +24,28 @@ export function updateStatus(data) {
         data
     })
 }
+
+export function updateExecution(data) {
+    return axios({
+        url: '/api/updateExecution/',
+        method: 'put',
+        data
+    })
+}
+
+export function fetchExecutionImage(query) {
+    return axios({
+      url: '/api/getExecutionImage/',
+      method: 'get',
+      params: query
+  })
+}
+
+
+export function fetchExecutionHomework(query) {
+    return axios({
+      url: '/api/getExecutionHomework/',
+      method: 'get',
+      params: query
+  })
+}

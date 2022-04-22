@@ -6,7 +6,6 @@
         :content="serialNumber"
         @close="handleSerialNumberVisible"
       ></BaseDialog>
-
     <div
       class="filter-container"
       style="display: flex; justify-content: space-between;"
@@ -95,7 +94,7 @@
       <div style="display: flex">
         <img
           :src="row.get_image"
-          style="width: 100px; height: 50px; margin-right: 10px"
+          class="pre-image"
           @click="previewLecture(row.get_image)"
         />
         <div
@@ -123,12 +122,12 @@
     </div>
     </template>
   </el-table-column>
-  <el-table-column label="类型" min-width="54px">
+  <el-table-column label="类型" min-width="80px">
     <template slot-scope="{ row }">
     <div
       style="
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: space-between;
       "
     >
@@ -153,6 +152,27 @@
         }}</span>
     </template>
   </el-table-column>
+      <el-table-column
+        label="操作"
+        align="center"
+        width="230"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="{ row, $index }">
+              <el-button type="primary" size="mini" @click="openDetail(row)">
+              目录
+            </el-button>
+            <el-button size="mini" @click="checkActivity(row)">
+              活动
+            </el-button>
+            <el-button type="success" size="mini" @click="checkStudent(row)">
+              学生名单
+            </el-button>
+            <el-button type="warning" size="mini" @click="showSerialNumber(row)">
+              序列号
+            </el-button>
+        </template>
+  </el-table-column>
 
   <el-table-column
     label="操作"
@@ -162,7 +182,7 @@
     class-name="small-padding fixed-width"
   >
         <template slot-scope="{ row, $index }">
-            <el-button type="warning" size="mini" @click="prewviewCourse(row)">
+            <el-button type="warning" size="mini" @click="previewCourse(row)">
               预览
            </el-button>
             <el-button type="primary" size="mini" @click="handleUpdate(row)">
@@ -197,27 +217,6 @@
               >
             </el-popconfirm>
         </template>
-</el-table-column>
-    <el-table-column
-      label="操作"
-      align="center"
-      width="230"
-      class-name="small-padding fixed-width"
-    >
-      <template slot-scope="{ row, $index }">
-          <el-button type="primary" size="mini" @click="checkActivity(row)">
-            活动
-          </el-button>
-            <el-button size="mini" @click="openDetail(row)">
-            目录
-          </el-button>
-          <el-button type="success" size="mini" @click="checkStudent(row)">
-            学生名单
-          </el-button>
-          <el-button type="warning" size="mini" @click="showSerialNumber(row)">
-            序列号
-          </el-button>
-      </template>
 </el-table-column>
 </el-table>
 
@@ -299,8 +298,10 @@
   </el-button>
 </div>
 </el-dialog>
+
 <el-dialog :visible.sync="previewDialogVisible">
-  <img width="100%" :src="previewMedia" alt="" />
+  <img width="100%" :src="previewMedia" alt="" v-if="previewFormat == 'Photo'"/>
+  <VideoPlayer :src="previewMedia" v-if="previewFormat == 'Video'"></VideoPlayer>
 </el-dialog>
   </div>
 </template>
@@ -311,14 +312,17 @@ import {
   createCourse,
   deleteCourse,
   updateStatus,
+  fetchFormatsList,
   fetchGenresList,
   updateCourse,
+  fetchPreviewLecture,
 } from "@/api/column";
 import { parseTime, uploadOptions } from "@/utils";
 import { mapGetters } from "vuex";
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import axios from "axios";
 import waves from "@/directive/waves";
+import VideoPlayer from "@/components/course/VideoPlayer.vue";
 
 
 const statusOptions = {
@@ -327,6 +331,9 @@ const statusOptions = {
 };
 
 const genresOptions = {
+};
+
+const formatOptions = {
 };
 
 export default {
@@ -340,9 +347,9 @@ export default {
           return genresOptions[status];
         },
     },
-
   components: {
     BaseDialog,
+    VideoPlayer,
   },
   directives: {
     waves,
@@ -409,10 +416,12 @@ export default {
         cover_url: "",
         previewDialogVisible: false,
         previewMedia: "",
+        previewFormat: "",
 };
   },
   created() {
       this.getGenresList();
+      this.getFormatsList();
     this.getList();
   },
   computed: {
@@ -425,6 +434,16 @@ export default {
             this.genresList = response.data;
             for (var genre in this.genresList) {
                 genresOptions[this.genresList[genre].id] = this.genresList[genre].name
+            }
+            this.listLoading = false;
+            });
+        },
+        getFormatsList() {
+          this.listLoading = true;
+          fetchFormatsList().then((response) => {
+            let formats = response.data;
+            for (var format in formats) {
+                formatOptions[formats[format].id] = formats[format].name
             }
             this.listLoading = false;
             });
@@ -466,15 +485,15 @@ export default {
           this.getList();
         },
         resetTemp() {
-              this.temp = {
-                  id: undefined,
-                  title: "",
-                  status: null,
-                  description: "",
-                  cover: "",
-                  genre: null,
-              };
-            },
+          this.temp = {
+              id: undefined,
+              title: "",
+              status: null,
+              description: "",
+              cover: "",
+              genre: null,
+          };
+        },
     handleCreate() {
           this.resetTemp();
           this.dialogStatus = "create";
@@ -489,6 +508,7 @@ export default {
         previewLecture(media) {
             this.previewDialogVisible = true;
             this.previewMedia = media;
+            this.previewFormat = "Photo";
         },
       getSortClass: function (key) {
           const sort = this.listQuery.sort;
@@ -643,10 +663,25 @@ export default {
                },
              });
          },
-         prewviewCourse(row) {
-             console.log(row);
+         previewCourse(row) {
+             this.listLoading = true;
+             this.previewDialogVisible = true;
+             fetchPreviewLecture({
+                 id: row.id,
+                 mode: "preview",
+             })
+             .then((res) => {
+                 this.previewMedia = res.data["media"],
+                 this.previewFormat = formatOptions[res.data["format"]],
+               this.$message({
+                 message: "操作成功",
+                 type: "success",
+               });
+             })
+             .finally(() => {
+                 this.listLoading = false;
+               });
           },
-
     },
 };
 
@@ -660,5 +695,15 @@ export default {
     }
 .v-modal {
     z-index: 10 !important;
+}
+.pre-image {
+    width: 100px;
+    height: 50px;
+    margin-right: 10px;
+    &:hover {
+        box-shadow: 0 26px 40px -24px rgba(0, 36, 100, 0.3);
+        opacity: 0.6;
+        cursor: pointer;
+    }
 }
 </style>
