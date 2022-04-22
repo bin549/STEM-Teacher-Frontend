@@ -96,6 +96,7 @@
         <img
           :src="row.get_image"
           style="width: 100px; height: 50px; margin-right: 10px"
+          @click="previewLecture(row.get_image)"
         />
         <div
           style="
@@ -298,6 +299,9 @@
   </el-button>
 </div>
 </el-dialog>
+<el-dialog :visible.sync="previewDialogVisible">
+  <img width="100%" :src="previewMedia" alt="" />
+</el-dialog>
   </div>
 </template>
 
@@ -403,6 +407,8 @@ export default {
         statusList: ['已下架', '已上架'],
         cover_name: "",
         cover_url: "",
+        previewDialogVisible: false,
+        previewMedia: "",
 };
   },
   created() {
@@ -431,7 +437,6 @@ export default {
                 this.temp.cover = response.data["name"];
                 this.cover_name = response.data["name"];
                 this.cover_url = response.data["image"];
-
                 this.$message({
                   message: "操作成功",
                   type: "success",
@@ -439,7 +444,6 @@ export default {
             }).finally(() => {
             this.listLoading = false;
           });
-          ;
         },
     showSerialNumber(data) {
       this.serialNumber = data.serial_number.toString();
@@ -481,6 +485,10 @@ export default {
           if (prop === "id") {
             this.sortByID(order);
           }
+        },
+        previewLecture(media) {
+            this.previewDialogVisible = true;
+            this.previewMedia = media;
         },
       getSortClass: function (key) {
           const sort = this.listQuery.sort;
@@ -650,5 +658,7 @@ export default {
         min-width: 32px !important;
         margin-right: -8px;
     }
-
+.v-modal {
+    z-index: 10 !important;
+}
 </style>

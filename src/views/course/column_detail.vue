@@ -1,50 +1,61 @@
 <template>
     <div class="app-container">
         <el-card shadow="never" v-loading="detailLoading">
-            <div style="display: flex; align-items: flex-start">
-                <img
-                  :src="detail.cover_img"
-                  style="width: 200px; height: 100px; margin-right: 20px"
-                />
-            <div style="flex: 1">
-              <div style="display: flex; justify-content: space-between">
-                <h4 style="margin-top: 5px; margin-bottom: 0">
-                  {{ detail.title }}
-                </h4>
-                <small style="color: #bbbbbb">{{
-                  ""
-                }}</small>
-              </div>
-              <p style="margin: 8px 0">
-                <small style="color: #bbbbbb">{{ detail.description }}</small>
-              </p>
-              <p>
-                <small style="color: red"></small>
-              </p>
-              <el-button-group style="float: right;">
-                <el-button size="small" type="warning" @click="changeCourseStatus">
-                  {{ detail.is_visible ? "下架" : "上架" }}
-                </el-button>
-                <!-- <el-button size="small" type="default" @click="changeDetailIsend"
-                  >设为连载中</el-button
-                > -->
-              </el-button-group>
-            </div>
-            </div>
+        <div style="display: flex; align-items: flex-start">
+            <img
+              :src="detail.cover_img"
+              style="width: 200px; height: 100px; margin-right: 20px"
+            />
+        <div style="flex: 1">
+          <div style="display: flex; justify-content: space-between">
+            <h4 style="margin-top: 5px; margin-bottom: 0">
+              {{ detail.title }}
+            </h4>
+            <small style="color: #bbbbbb">{{
+              ""
+            }}</small>
+          </div>
+          <p style="margin: 8px 0">
+            <small style="color: #bbbbbb">{{ detail.description }}</small>
+          </p>
+          <p>
+            <small style="color: red"></small>
+          </p>
+          <el-button-group style="float: right;">
+            <el-button size="small" type="warning" @click="changeCourseStatus">
+              {{ detail.is_visible ? "下架" : "上架" }}
+            </el-button>
+            <!-- <el-button size="small" type="default" @click="changeDetailIsend"
+              >设为连载中</el-button
+            > -->
+          </el-button-group>
+        </div>
+    </div>
     </el-card>
+
     <div
       class="filter-container"
       style="display: flex; justify-content: space-between; margin-top: 20px"
     >
-    <el-button
-      class="filter-item"
-      style="margin-left: 10px"
-      type="primary"
-      icon="el-icon-edit"
-      @click="addLecture"
-    >
-      新增目录
-    </el-button>
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px"
+          type="primary"
+          icon="el-icon-edit"
+          @click="handleVideoCreate"
+        >
+          新增视频课程
+        </el-button>
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px"
+          type="primary"
+          icon="el-icon-edit"
+          @click="handlePhotoCreate"
+        >
+          新增图文课程
+        </el-button>
+    </div>
     <el-table
       ref="dragTable"
       v-loading="listLoading"
@@ -55,12 +66,16 @@
       highlight-current-row
       style="width: 100%"
     >
-
     <el-table-column type="index" width="50">
     </el-table-column>
-    <el-table-column label="单品内容" min-width="180px">
+    <el-table-column label="内容" width="240" min-width="180px">
         <template slot-scope="{ row }">
             <div style="display: flex">
+              <img
+                :src="row.media"
+                style="width: 100px; height: 50px; margin-right: 10px"
+                @click="previewLecture(row.media)"
+              />
                 <div
                   style="
                     display: flex;
@@ -75,20 +90,22 @@
     </el-table-column>
         <el-table-column label="类型" width="110px" align="center">
           <template slot-scope="{ row }">
-            <span>{{ row.format }}</span>
+          <el-tag type="default">
+        <span>{{ row.format | lectureFormatFilter }}</span>
+        </el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column label="创建时间" width="150px" align="center">
+        <el-table-column label="创建时间" width="200px" align="center">
           <template slot-scope="{ row }">
               <span>{{
                 row.created_time | parseTime("{y}-{m}-{d} {h}:{i}:{s}")
               }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" class-name="status-col" width="100">
+        <el-table-column label="可预览" class-name="status-col" width="100">
           <template slot-scope="{ row }">
-            <el-tag :type="row.is_preview ? 'success' : 'danger'">
+            <el-tag :type="row.is_preview ? 'success' : 'info'">
               {{ row.is_preview | statusFilter }}
             </el-tag>
           </template>
@@ -113,42 +130,152 @@
             </el-popconfirm>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="Drag" width="80">
+        <el-table-column align="center" label="播放顺序" width="80">
           <template slot-scope="{}">
             <svg-icon class="drag-handler" icon-class="drag" />
           </template>
         </el-table-column>
-
 </el-table>
-
-</div>
+    <el-dialog
+          :title="textMap[dialogStatus]"
+          :visible.sync="videoDialogFormVisible"
+          v-loading="listLoading"
+        >
+          <el-form
+            ref="dataForm"
+            :rules="rules"
+            :model="temp"
+            label-position="left"
+            label-width="70px"
+            style="width: 400px; margin-left: 50px"
+          >
+            <el-form-item label="标题" prop="title">
+              <el-input v-model="temp.title" />
+            </el-form-item>
+            <el-form-item label="内容">
+                <el-upload
+                  class="upload-demo"
+                  action="#"
+                  :headers="uploadOptions.headers"
+                  :http-request="uploadHttpRequest"
+                  :on-remove="handleRemove"
+                  :file-list="videoList"
+                  accept=".mp4,.avi,.wmv,.mov,.flv,.rmvb"
+                  :on-success="handleVideoUploadSuccess"
+                  :limit=1
+                >
+                  <el-button size="small" type="primary">上传视频</el-button>
+                  <div slot="tip" class="el-upload__tip">
+                    支持mp4，avi，wmv，mov，flv，rmvb，3gp，m4v，mkv格式；文件最大不超过5G。
+                    当前店铺版本最大支持720高清转码
+                  </div>
+                </el-upload>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="videoDialogFormVisible = false"> 取消 </el-button>
+            <el-button
+              type="primary"
+              @click="dialogStatus === 'create' ? createData() : updateData()"
+              :loading="dialogBtnLoading"
+            >
+              {{ dialogBtnLoading ? "提交中..." : "提交" }}
+            </el-button>
+          </div>
+        </el-dialog>
+        <el-dialog
+              :title="textMap[dialogStatus]"
+              :visible.sync="photoDialogFormVisible"
+              v-loading="listLoading"
+            >
+              <el-form
+                ref="dataForm"
+                :rules="rules"
+                :model="temp"
+                label-position="left"
+                label-width="70px"
+                style="width: 400px; margin-left: 50px"
+              >
+                <el-form-item label="标题" prop="title">
+                  <el-input v-model="temp.title" />
+                </el-form-item>
+                <el-form-item label="内容">
+                  <el-upload
+                    action="#"
+                    :headers="uploadOptions.headers"
+                    :http-request="uploadHttpRequest"
+                    list-type="picture-card"
+                    :on-preview="handlePictureCardPreview"
+                    :on-remove="handleUploadRemove"
+                    :on-success="handleUploadSuccess"
+                    :fileList="photoList"
+                    :limit=1
+                  >
+                    <i class="el-icon-plus"></i>
+                  </el-upload>
+                  <el-dialog :visible.sync="dialogVisible">
+                    <img width="100%" :src="dialogImageUrl" alt="" />
+                  </el-dialog>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="photoDialogFormVisible = false"> 取消 </el-button>
+                <el-button
+                  type="primary"
+                  @click="dialogStatus === 'create' ? createData() : updateData()"
+                  :loading="dialogBtnLoading"
+                >
+                  {{ dialogBtnLoading ? "提交中..." : "提交" }}
+                </el-button>
+              </div>
+            </el-dialog>
+            <el-dialog :visible.sync="previewDialogVisible">
+              <img width="100%" :src="previewMedia" alt="" />
+            </el-dialog>
     </div>
+
 </template>
 
 <script>
 let id = 0;
 const statusOptions = {
-  0: "已下架",
-  1: "已上架",
+  0: "是",
+  1: "否",
+};
+const formatOptions = {
+};
+const formatRevertOptions = {
+};
+const formatNameOptions = {
+    "Video" : "视频",
+    "Photo" : "图文",
 };
 
 import {
   fetchCourseDetail,
   fetchCourseLectures,
+  fetchFormatsList,
+  createLecture,
+  deleteLecture,
 } from "@/api/column.js";
+import axios from "axios";
+
 import Sortable from "sortablejs";
-import { parseTime } from "@/utils";
+import { parseTime, uploadOptions } from "@/utils";
 
 export default {
+    inject: ["reload"],
     beforeRouteEnter(to, from, next) {
           id = to.query.id;
           next();
         },
   filters: {
     statusFilter(status) {
-        console.log(status);
-      return statusOptions[status ? 1 : 0];
+      return statusOptions[status ? 0 : 1];
     },
+    lectureFormatFilter(format_id) {
+        return formatNameOptions[formatOptions[format_id]];
+    }
   },
     data() {
         return {
@@ -170,35 +297,168 @@ export default {
               page: 1,
             },
             statusOptions,
-};
+            dialogStatus: "",
+              textMap: {
+                update: "修改",
+                create: "新增",
+              },
+          rules: {
+            title: [
+              {
+                required: true,
+                message: "标题不能为空",
+                trigger: "blur",
+              },
+            ],
+          },
+          temp: {
+              course: null,
+              title: "",
+              content: null,
+              format: null,
+          },
+          photoList: [],
+          videoList: [],
+          dialogVisible: false,
+          dialogImageUrl: "",
+          dialogBtnLoading: false,
+          photoDialogFormVisible: false,
+          videoDialogFormVisible: false,
+          uploadOptions,
+          previewDialogVisible: false,
+          previewMedia: "",
+        };
     },
   created() {
     this.getData();
+    this.getFormatsList();
     this.getList();
  },
   methods: {
       getData() {
           this.detailLoading = true;
-          fetchCourseDetail({
-            id,
+          fetchCourseDetail(({
+            id: id,
+            method: 1,
           })
-            .then((res) => {
-                this.detail = res.data;
+        ).then((response) => {
+            console.log(response.data);
+                this.detail = response.data;
             })
             .finally(() => {
               this.detailLoading = false;
             });
       },
-      addLecture() {},
+      getFormatsList() {
+        this.listLoading = true;
+        fetchFormatsList().then((response) => {
+          let formats = response.data;
+          for (var format in formats) {
+              formatOptions[formats[format].id] = formats[format].name
+              formatRevertOptions[formats[format].name] = formats[format].id
+          }
+          this.listLoading = false;
+          });
+      },
+      handleVideoCreate() {
+          this.dialogStatus = "create";
+          this.videoDialogFormVisible = true;
+          this.temp["format"] = formatRevertOptions["Video"];
+          this.$nextTick(() => {
+            this.$refs["dataForm"].clearValidate();
+          });
+      },
+      handlePhotoCreate() {
+          this.dialogStatus = "create";
+          this.photoDialogFormVisible = true;
+          this.temp["format"] = formatRevertOptions["Photo"];
+          this.$nextTick(() => {
+            this.$refs["dataForm"].clearValidate();
+          });
+      },
+    resetTemp() {
+        this.temp = {
+            course: null,
+            title: "",
+            content: null,
+            format: null,
+        };
+        },
       async getList() {
+          this.resetTemp();
           this.listLoading = true;
           const { data } = await fetchCourseLectures(this.listQuery);
           this.list = data;
           this.listLoading = false;
-
-
       },
       changeCourseStatus() {},
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
+      handleUploadRemove() {},
+      handleUploadSuccess() {},
+      handleRemove() {},
+      handleVideoUploadSuccess() {},
+
+      uploadHttpRequest(param) {
+          this.listLoading = true;
+          let formData = new FormData();
+          formData.append("file", param.file);
+          axios.post(this.uploadOptions.action, formData).then((response) => {
+              this.temp["content"]  = response.data.name;
+              this.$message({
+                message: "操作成功",
+                type: "success",
+              });
+              }).finally(() => {
+              this.listLoading = false;
+            });
+      },
+      previewLecture(media) {
+          this.previewDialogVisible = true;
+          this.previewMedia = media;
+      },
+      createData() {
+          this.$refs["dataForm"].validate((valid) => {
+              if (valid) {
+                  this.dialogBtnLoading = true;
+                  this.temp["course"] = id;
+                  createLecture(this.temp)
+                  .then(() => {
+                      this.dialogFormVisible = false;
+                      this.$notify({
+                        title: "成功",
+                        message: "创建课程成功",
+                        type: "success",
+                        duration: 2000,
+                      });
+                      this.reload();
+                  })
+                  .finally(() => {
+                    this.dialogBtnLoading = false;
+                  });
+              }
+            });
+      },
+      handleDelete(row, index) {
+          this.listLoading = true;
+          deleteLecture({
+            id: row.id,
+          })
+          .then((response) => {
+            this.$notify({
+              title: "提示",
+              message: "删除成功",
+              type: "success",
+              duration: 2000,
+            });
+            this.list.splice(index, 1);
+          })
+          .finally(() => {
+            this.listLoading = false;
+          });
+      },
   },
 };
 </script>
@@ -222,4 +482,9 @@ export default {
 .show-d {
   margin-top: 15px;
 }
+
+.v-modal {
+z-index: 10 !important;
+}
+
 </style>

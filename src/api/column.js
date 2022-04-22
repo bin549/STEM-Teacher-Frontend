@@ -27,7 +27,6 @@ export function fetchCourseList(query) {
 }
 
 export function fetchCourseDetail(query) {
-    console.log(query);
     return axios({
       url: '/api/getCourseById/',
       method: 'get',
@@ -38,6 +37,14 @@ export function fetchCourseDetail(query) {
 export function createCourse(data) {
     return axios({
         url: '/api/createCourse/',
+        method: 'post',
+        data
+    })
+}
+
+export function createLecture(data) {
+    return axios({
+        url: '/api/createLecture/',
         method: 'post',
         data
     })
@@ -68,6 +75,15 @@ export function deleteCourse(data) {
     })
 }
 
+export function deleteLecture(data) {
+    return axios({
+        url: '/api/deleteLecture/',
+        method: 'delete',
+        data
+    })
+}
+
+
 export function fetchCourseLectures(query) {
     return axios({
         url: '/api/getLecturesByCourseId/',
@@ -91,4 +107,12 @@ export function deleteSelection(data) {
         method: 'delete',
         data
     })
+}
+
+export function fetchFormatsList(query) {
+    return axios({
+      url: '/api/getFormats/',
+      method: 'get',
+      params: query
+  })
 }
