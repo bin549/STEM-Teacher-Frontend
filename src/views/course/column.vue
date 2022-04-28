@@ -17,7 +17,7 @@
       icon="el-icon-edit"
       @click="handleCreate"
     >
-      新增专栏
+      新增课程
     </el-button>
     <div>
       <el-select
@@ -89,7 +89,7 @@
       <span>{{ $index +1 }}</span>
     </template>
   </el-table-column>
-  <el-table-column label="专栏内容" min-width="250px">
+  <el-table-column label="课程标题" min-width="250px">
     <template slot-scope="{ row }">
       <div style="display: flex">
         <img
@@ -109,7 +109,7 @@
       </div>
     </template>
   </el-table-column>
-  <el-table-column label="内容" min-width="340px">
+  <el-table-column label="课程内容" min-width="340px">
     <template slot-scope="{ row }">
     <div
       style="
@@ -122,7 +122,7 @@
     </div>
     </template>
   </el-table-column>
-  <el-table-column label="类型" min-width="80px">
+  <el-table-column label="课程类型" min-width="80px">
     <template slot-scope="{ row }">
     <div
       style="
@@ -137,14 +137,34 @@
     </div>
     </template>
   </el-table-column>
-  <el-table-column label="状态" class-name="status-col" width="80">
+  <el-table-column label="课程状态" class-name="status-col" width="80">
     <template slot-scope="{ row }">
       <el-tag :type="row.is_visible ? 'success' : 'danger'">
         {{ row.is_visible | statusFilter }}
       </el-tag>
     </template>
   </el-table-column>
-
+  <el-table-column label="课程价格" class-name="status-col" width="80">
+    <template slot-scope="{ row }">
+      <el-tag type="default">
+        $ {{ row.price }}
+      </el-tag>
+    </template>
+  </el-table-column>
+  <el-table-column label="选课人数" class-name="status-col" width="80">
+    <template slot-scope="{ row }">
+      <el-tag type="default">
+          {{ row.id | studentCountFilter }}
+      </el-tag>
+    </template>
+  </el-table-column>
+  <el-table-column label="课时数量" class-name="status-col" width="80">
+    <template slot-scope="{ row }">
+      <el-tag type="default">
+          {{ row.id | lectureCountFilter }}
+      </el-tag>
+    </template>
+  </el-table-column>
   <el-table-column label="创建时间" width="170px" align="center">
     <template slot-scope="{ row }">
         <span>{{
@@ -280,6 +300,15 @@
     </el-select>
 </el-form-item>
 </el-form-item>
+<el-form-item label="课程价格">
+  <el-input-number
+    v-model="temp.price"
+    :precision="2"
+    :step="1.0"
+    :min="0"
+    label="课程价格"
+  ></el-input-number>
+</el-form-item>
 <el-form-item label="状态">
   <el-radio-group v-model="temp.status">
     <el-radio :label="0">下架</el-radio>
@@ -298,17 +327,16 @@
   </el-button>
 </div>
 </el-dialog>
-
-<el-dialog :visible.sync="previewDialogVisible">
-  <img width="100%" :src="previewMedia" alt="" v-if="previewFormat == 'Photo'"/>
-  <VideoPlayer :src="previewMedia" v-if="previewFormat == 'Video'"></VideoPlayer>
-</el-dialog>
+    <el-dialog :visible.sync="previewDialogVisible" :before-close="handleClose">
+      <img width="100%" :src="previewMedia" alt="" v-if="previewFormat == 'Photo'"/>
+      <VideoPlayer :src="previewMedia" v-if="previewFormat == 'Video'"></VideoPlayer>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {
-  fetchList,
+  fetchCourses,
   createCourse,
   deleteCourse,
   updateStatus,
@@ -316,14 +344,17 @@ import {
   fetchGenresList,
   updateCourse,
   fetchPreviewLecture,
+  fetchLectureCount,
 } from "@/api/column";
+import {
+  fetchStudentCount,
+} from "@/api/user";
 import { parseTime, uploadOptions } from "@/utils";
 import { mapGetters } from "vuex";
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import axios from "axios";
 import waves from "@/directive/waves";
 import VideoPlayer from "@/components/course/VideoPlayer.vue";
-
 
 const statusOptions = {
   0: "已下架",
@@ -336,6 +367,12 @@ const genresOptions = {
 const formatOptions = {
 };
 
+const studentCountOptions = {
+};
+
+const lectureCountOptions = {
+};
+
 export default {
     name: "column",
     inject: ["reload"],
@@ -346,6 +383,14 @@ export default {
         genreNameFilter(status) {
           return genresOptions[status];
         },
+        studentCountFilter(course_id) {
+          return studentCountOptions[course_id];
+        },
+
+          lectureCountFilter(course_id) {
+            return lectureCountOptions[course_id];
+          },
+
     },
   components: {
     BaseDialog,
@@ -377,6 +422,7 @@ export default {
           description: "",
           cover: "",
           genre: null,
+          price: 0,
       },
       dialogStatus: "",
       dialogFormVisible: false,
@@ -385,13 +431,13 @@ export default {
           create: "新增",
         },
         rules: {
-              title: [
-                {
-                  required: true,
-                  message: "标题不能为空",
-                  trigger: "blur",
-                },
-              ],
+          title: [
+            {
+              required: true,
+              message: "标题不能为空",
+              trigger: "blur",
+            },
+          ],
         description: [
           {
             required: true,
@@ -471,15 +517,36 @@ export default {
     handleSerialNumberVisible() {
       this.serialNumber = null;
     },
-      getList() {
-        this.listLoading = true;
-        this.listQuery.id = this.id;
-        fetchList(this.listQuery).then((response) => {
-          this.list = response.data;
-          this.total = response.data.length;
-          this.listLoading = false;
-      });
-      },
+        getList() {
+            this.listLoading = true;
+            this.listQuery.id = this.id;
+            fetchCourses(this.listQuery).then((response) => {
+                this.list = response.data;
+                this.total = response.data.length;
+                for (var i = 0; i < this.list.length; i++) {
+
+                    this.setCountOptions(this.list[i].id);
+                }
+                this.listLoading = false;
+            });
+        },
+          //
+          setCountOptions(course_id) {
+              fetchStudentCount({
+                  course_id: course_id,
+                  mode: "count",
+              }).then(response => {
+                  studentCountOptions[course_id] = response.data;
+              })
+              fetchLectureCount({
+                  course_id: course_id,
+                  mode: "count",
+              }).then(response => {
+                  lectureCountOptions[course_id] = response.data;
+              })
+          },
+
+
       handleFilter() {
           // this.listQuery.page = 1;
           this.getList();
@@ -492,6 +559,7 @@ export default {
               description: "",
               cover: "",
               genre: null,
+              price: 0,
           };
         },
     handleCreate() {
@@ -517,7 +585,7 @@ export default {
       handleDelete(row, index) {
           this.listLoading = true;
           deleteCourse({
-            ids: [row.id],
+            id: row.id,
           })
           .then((response) => {
             this.$notify({
@@ -565,11 +633,11 @@ export default {
           this.dialogFormVisible = true;
           this.$nextTick(() => {
             this.$refs["dataForm"].clearValidate();
-      });
+          });
       },
       openDetail(row) {
        this.$router.push({
-         name: "ColumnDetail",
+         name: "Lecture",
          query: {
            id: row.id,
          },
@@ -612,6 +680,7 @@ export default {
               this.temp["owner"] = this.id;
               this.temp["genre"] = this.temp.genre;
               this.temp["cover"] = this.temp.cover;
+              this.temp["price"] = this.temp.price;
               createCourse(this.temp)
               .then(() => {
                   this.dialogFormVisible = false;
@@ -638,7 +707,7 @@ export default {
               this.dialogBtnLoading = true;
               updateCourse(tempData)
                 .then(() => {
-                    this.temp["get_image"] = this.cover_url;
+                  this.temp["get_image"] = this.cover_url;
                   const index = this.list.findIndex((v) => v.id === this.temp.id);
                   this.list.splice(index, 1, this.temp);
                   this.dialogFormVisible = false;
@@ -682,6 +751,11 @@ export default {
                  this.listLoading = false;
                });
           },
+          handleClose() {
+              this.previewDialogVisible = false;
+              this.previewFormat = "Photo";
+          },
+
     },
 };
 

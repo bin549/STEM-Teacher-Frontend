@@ -3,11 +3,11 @@
     <div v-if="user">
       <el-row :gutter="20">
         <el-col :span="13" :xs="24">
-            <activity />
+          <activity />
         </el-col>
         <el-col :span="11" :xs="24">
           <el-card>
-              <timeline />
+            <timeline />
           </el-card>
         </el-col>
       </el-row>

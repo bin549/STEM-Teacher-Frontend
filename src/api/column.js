@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 import axios from '@/utils/http'
 
-export function fetchList(query) {
+export function fetchCourses(query) {
     return axios({
       url: '/api/getCourseByUserId/',
       method: 'get',
@@ -93,9 +93,9 @@ export function fetchCourseLectures(query) {
 }
 
 
-export function createSelect(data) {
+export function createSelection(data) {
     return axios({
-        url: '/api/createSelect/',
+        url: '/api/createSelection/',
         method: 'post',
         data
     })
@@ -138,6 +138,46 @@ export function fetchPreviewLecture(query) {
 export function fetchCourseId(query) {
     return axios({
       url: '/api/getCourseId/',
+      method: 'get',
+      params: query
+  })
+}
+
+export function fetchComments(query) {
+    return axios({
+      url: '/api/getComments/',
+      method: 'get',
+      params: query
+  })
+}
+
+export function deleteComments(query) {
+    return axios({
+      url: '/api/deleteComments/',
+      method: 'delete',
+      params: query
+  })
+}
+
+export function fetchEvaluations(query) {
+    return axios({
+      url: '/api/getEvaluations/',
+      method: 'get',
+      params: query
+  })
+}
+
+export function updateCommentCheckStatus(query) {
+    return axios({
+      url: '/api/updateCommentCheckStatus/',
+      method: 'put',
+      params: query
+  })
+}
+
+export function fetchLectureCount(query) {
+    return axios({
+      url: '/api/getLectureCount/',
       method: 'get',
       params: query
   })

@@ -69,72 +69,35 @@ export const asyncRoutes = [
   {
     path: '/course',
     component: Layout,
-    redirect: "/course/media",
-    name: "Course",
-    alwaysShow: true,
-    meta: {
-        title: "课程管理",
-        icon: "education",
-        roles: ['admin', 'editor']
-    },
-    children: [{
-        path: "column",
-        name: "Column",
-        component: () =>
-            import('@/views/course/column'),
-        meta: {
-            title: "专栏"
-        }
-    }, {
-        hidden: true,
-        path: "column_detail",
-        name: "ColumnDetail",
-        component: () =>
-            import('@/views/course/column_detail'),
-        meta: {
-            title: "专栏详情"
-        }
-    },
+    children: [
         {
-        path: "media",
-        name: "Media",
-        component: () =>
-            import('@/views/course/media'),
-        meta: {
-            title: "图文"
-        }
-    },
-    {
-        path: "video",
-        name: "Video",
-        component: () =>
-            import('@/views/course/video'),
-        meta: {
-            title: "视频"
-        }
-    }, ]
+            path: "column",
+            name: "Column",
+            component: () =>
+                import('@/views/course/column'),
+                meta: { title: '课程管理', icon: 'education', noCache: true }
+            },
+            {
+                hidden: true,
+                path: "lecture",
+                name: "Lecture",
+                component: () =>
+                    import('@/views/course/lecture'),
+                meta: {
+                    title: "课时管理"
+                }
+            },
+        ]
   },
-
-
     {
       path: '/activity',
       component: Layout,
-      redirect: "/activity/assignment",
-      name: "education",
-      alwaysShow: true,
-      meta: {
-          title: "活动管理",
-          icon: "excel",
-          roles: ['admin', 'editor']
-      },
       children: [{
           path: "assignment",
           name: "Activity",
           component: () =>
               import('@/views/activity/assignment'),
-          meta: {
-              title: "活动"
-          }
+              meta: { title: '活动管理', icon: 'form', noCache: true }
       }, {
           hidden: true,
           path: "execution",
@@ -143,14 +106,6 @@ export const asyncRoutes = [
                 import('@/views/activity/execution'),
           meta: {
               title: "执行情况"
-          }
-      },{
-          path: "center",
-          name: "Center",
-          component: () =>
-                import('@/views/activity/center'),
-          meta: {
-              title: "展示中心"
           }
       },
       ]
@@ -161,12 +116,25 @@ export const asyncRoutes = [
           children: [
             {
               path: 'index',
-              component: () => import('@/views/student/index'),
               name: 'Student',
+              component: () => import('@/views/student/index'),
               meta: { title: '学生管理', icon: 'peoples', noCache: true }
             }
           ]
         },
+            {
+              path: '/center',
+              component: Layout,
+              children: [
+                {
+                  path: 'index',
+                  name: 'Center',
+                  component: () => import('@/views/center/index'),
+                  meta: { title: '展示中心', icon: 'tab', noCache: true }
+                }
+              ]
+            },
+
 
       // {
       //   path: '/notifications',
@@ -182,18 +150,19 @@ export const asyncRoutes = [
       // },
 
 
-  // {
-  //   path: '/icon',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/icons/index'),
-  //       name: 'Icons',
-  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+          hidden: true,
+        path: 'index',
+        component: () => import('@/views/icons/index'),
+        name: 'Icons',
+        meta: { title: 'Icons', icon: 'icon', noCache: true }
+      }
+    ]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
 ]

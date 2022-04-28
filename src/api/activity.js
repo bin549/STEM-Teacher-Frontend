@@ -57,3 +57,45 @@ export function createAssignment(query) {
       params: query
   })
 }
+
+export function fetchExecutions(query) {
+    return axios({
+      url: '/api/getExecutions/',
+      method: 'get',
+      params: query
+  })
+}
+
+
+export function fetchExecutionMedias(query) {
+    return axios({
+      url: '/api/getExecutionImage/',
+      method: 'get',
+      params: query
+  })
+}
+
+
+export function updateAssignment(query) {
+    return axios({
+      url: '/api/updateAssignment/',
+      method: 'put',
+      params: query
+  })
+}
+
+export function deleteAssignmnet(query) {
+    return axios({
+      url: '/api/deleteAssignmnet/',
+      method: 'delete',
+      params: query
+  })
+}
+
+export function fetchExecutionStatusCount(query) {
+    return axios({
+      url: '/api/getExecutionStatusCount/',
+      method: 'get',
+      params: query
+  })
+}

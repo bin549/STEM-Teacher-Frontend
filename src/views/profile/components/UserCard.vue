@@ -1,7 +1,7 @@
 <template>
   <el-card style="margin-bottom: 20px">
     <div slot="header" class="clearfix">
-      <span>About me</span>
+      <span>我的信息</span>
     </div>
     <div class="user-profile">
       <div class="box-center">
@@ -25,17 +25,17 @@
     <div class="user-bio">
       <div class="user-education user-bio-section">
         <div class="user-bio-section-header">
-          <svg-icon icon-class="education" /><span>Education</span>
+          <svg-icon icon-class="education" /><span>个人简介</span>
         </div>
         <div class="user-bio-section-body">
           <div class="text-muted">
-            JS in Computer Science from the University of Technology
+              JS in Computer Science from the University of Technology
           </div>
         </div>
       </div>
       <div class="user-skills user-bio-section">
         <div class="user-bio-section-header">
-          <svg-icon icon-class="skill" /><span>Skills</span>
+          <svg-icon icon-class="skill" /><span>我的技能</span>
         </div>
         <div class="user-bio-section-body">
           <div class="progress-item">

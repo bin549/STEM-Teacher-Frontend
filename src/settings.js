@@ -1,11 +1,11 @@
 module.exports = {
-  title: 'Vue Element Admin',
+  title: 'STEM 教师端',
 
   /**
    * @type {boolean} true | false
    * @description Whether show the settings right-panel
    */
-  showSettings: true,
+  showSettings: false,
 
   /**
    * @type {boolean} true | false

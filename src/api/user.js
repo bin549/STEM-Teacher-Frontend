@@ -24,11 +24,33 @@ export function getInfo(token) {
   })
 }
 
-
-
 export function fetchList(query) {
     return axios({
       url: '/api/getStudentByOwnerId/',
+      method: 'get',
+      params: query
+  })
+}
+
+export function fetchStudent(query) {
+    return axios({
+      url: '/api/getStudents/',
+      method: 'get',
+      params: query
+  })
+}
+
+export function fetchStudents(query) {
+    return axios({
+      url: '/api/getStudents/',
+      method: 'get',
+      params: query
+  })
+}
+
+export function fetchStudentCount(query) {
+    return axios({
+      url: '/api/getStudentCount/',
       method: 'get',
       params: query
   })
