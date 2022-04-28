@@ -241,7 +241,6 @@
 <script>
 import {
   fetchExecution,
-  updateStatus,
   updateExecution,
   fetchExecutionImage,
 } from "@/api/activity";
@@ -370,7 +369,6 @@ export default {
 
     updateAppraise() {
       this.listLoading = true;
-      console.log(this.temp);
       updateExecution(this.temp)
         .then((response) => {
           this.$message({
@@ -388,10 +386,9 @@ export default {
 
     handleExcellentStatus(row, status) {
       this.listLoading = true;
-      updateStatus({
+      updateExecution({
         id: row.id,
-        status,
-        update: "status",
+        mode: "status",
       })
         .then((res) => {
           this.$message({

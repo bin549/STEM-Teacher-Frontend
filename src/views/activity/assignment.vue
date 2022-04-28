@@ -362,9 +362,6 @@ export default {
             .finally(() => {
               this.dialogBtnLoading = false;
               this.reload();
-              this.reload();
-              this.reload();
-              this.reload();
             });
         }
       });

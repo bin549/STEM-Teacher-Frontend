@@ -17,14 +17,6 @@ export function fetchExecution(query) {
   })
 }
 
-export function updateStatus(data) {
-    return axios({
-        url: '/api/updateStatus/',
-        method: 'put',
-        data
-    })
-}
-
 export function updateExecution(data) {
     return axios({
         url: '/api/updateExecution/',
