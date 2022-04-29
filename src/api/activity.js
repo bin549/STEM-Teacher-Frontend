@@ -91,3 +91,11 @@ export function fetchExecutionStatusCount(query) {
       params: query
   })
 }
+
+export function fetchActivityLog(query) {
+    return axios({
+      url: '/api/getActivityLog/',
+      method: 'get',
+      params: query
+  })
+}

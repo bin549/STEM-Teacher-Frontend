@@ -111,14 +111,14 @@
           v-if="row.is_preview"
           size="mini"
           type="success"
-          disabled
+          @click="handlePreviewStatus(row, 0)"
         >
-          当前预览
+          取消预览
         </el-button>
         <el-button
           v-if="!row.is_preview"
           size="mini"
-          @click="handlePreviewStatus(row)"
+          @click="handlePreviewStatus(row, 1)"
         >
           设为预览
         </el-button>
@@ -827,10 +827,11 @@ export default {
             this.listLoading = false;
           });
       },
-      handlePreviewStatus(row) {
+      handlePreviewStatus(row, status) {
           this.listLoading = true;
           setPreviewLecture({
             id: row.id,
+            status,
             update: "status",
           })
           .then((res) => {
@@ -838,10 +839,9 @@ export default {
               message: "操作成功",
               type: "success",
             });
-            // row.is_preview = true;
+            row.is_preview = status;
           })
           .finally(() => {
-              this.reload();
               this.listLoading = false;
             });
         },
@@ -903,7 +903,7 @@ export default {
   margin-top: 15px;
 }
 .v-modal {
-z-index: 10 !important;
+    z-index: 10 !important;
 }
 .pre-image {
     width: 100px;

@@ -4,20 +4,20 @@
 
     <el-row :gutter="20" style="margin-bottom: 30px">
       <el-col :span="12" :offset="0">
-        <card-box title="运营小助手" :list="list1"></card-box>
+        <card-box title="常见功能" :list="list1"></card-box>
       </el-col>
       <el-col :span="12" :offset="0">
-        <card-box title="常见功能" :list="list2"></card-box>
+        <card-box title="其它功能" :list="list2"></card-box>
       </el-col>
     </el-row>
 
 
         <el-row :gutter="20">
           <el-col :span="12" :offset="0">
-            <course></course>
+            <newest-course></newest-course>
           </el-col>
           <el-col :span="12" :offset="0">
-              <course></course>
+              <hotest-course></hotest-course>
           </el-col>
         </el-row>
 
@@ -27,69 +27,71 @@
 
 <script>
 import CardBox from "./components/CardBox";
-import Course from "./components/Course";
+import NewestCourse from "./components/NewestCourse";
+import HotestCourse from "./components/HotestCourse";
 // import Order from "./components/Order";
 
 export default {
   name: "DashboardAdmin",
   components: {
     CardBox,
-    Course,
+    NewestCourse,
+    HotestCourse,
     // Order,
 },
   data() {
     return {
       list1: [
-        {
-          name: "拼团",
-          remark: "多人拼团享受优惠",
-          icon: "el-icon-guide",
-          path: "Group",
-        },
-        {
-          name: "秒杀",
-          remark: "限时秒杀享低价",
-          icon: "el-icon-thumb",
-          path: "Flashsale",
-        },
-        {
-          name: "优惠券",
-          remark: "有偿激励课程推广",
-          icon: "el-icon-news",
-          path: "Coupon",
-        },
-        {
-          name: "限时折扣",
-          remark: "限时限量打折降价",
-          icon: "el-icon-time",
-          path: "Flashsale",
-        },
+         {
+             name: "课程管理",
+             remark: "课程管理",
+             icon: "el-icon-copy-document",
+             path: "Column",
+         },
+         {
+             name: "活动管理",
+             remark: "活动管理",
+             icon: "el-icon-microphone",
+             path: "Activity",
+         },
+         {
+         name: "学生管理",
+         remark: "学生管理",
+         icon: "el-icon-video-camera",
+         path: "Student",
+         },
+         {
+         name: "展示中心",
+         remark: "展示中心",
+         icon: "el-icon-goods",
+         path: "Center",
+         },
       ],
       list2: [
-        {
-          name: "图文",
-          remark: "图文课程",
-          icon: "el-icon-copy-document",
-          path: "Media",
-        },
-        {
-          name: "音频",
-          remark: "音频课程",
-          icon: "el-icon-microphone",
-          path: "Audio",
-        },
-        {
-          name: "视频",
-          remark: "视频课程",
-          icon: "el-icon-video-camera",
-          path: "Video",
-        },
-        {
-          name: "专栏",
-          remark: "专栏",
-          icon: "el-icon-goods",
-          path: "Column",
-        },
+         {
+             name: "待开发",
+             remark: "待开发",
+             icon: "el-icon-copy-document",
+             path: "/#/dashboard",
+         },
+         {
+             name: "待开发",
+             remark: "待开发",
+             icon: "el-icon-microphone",
+             path: "/#/dashboard",
+         },
+         {
+         name: "待开发",
+         remark: "待开发",
+         icon: "el-icon-video-camera",
+         path: "/#/dashboard",
+         },
+         {
+         name: "待开发",
+         remark: "待开发",
+         icon: "el-icon-goods",
+         path: "/#/dashboard",
+         },
       ],
     };
   },

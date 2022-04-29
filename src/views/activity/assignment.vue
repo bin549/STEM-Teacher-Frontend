@@ -348,7 +348,13 @@ export default {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           this.dialogBtnLoading = true;
-          this.temp["course"] = this.currentSelectedCourse;
+          if (this.currentSelectedCourse != null){
+              console.log(this.currentSelectedCourse);
+              this.temp["course"] = this.currentSelectedCourse;
+          }
+            else{
+                this.temp["course"] = course_id;
+            }
           createAssignment(this.temp)
             .then(() => {
               this.dialogFormVisible = false;
@@ -377,12 +383,23 @@ export default {
     },
 
     reload(row) {
-      this.$router.push({
-        name: "Education",
-        query: {
-          id: currentSelectedCourse,
-        },
-      });
+        if (this.currentSelectedCourse != null){
+          this.$router.push({
+            name: "Activity",
+            query: {
+              id: this.currentSelectedCourse,
+            },
+          });
+        }
+          else{
+            this.$router.push({
+              name: "Education",
+              query: {
+                id: course_id,
+              },
+            });
+          }
+
     },
 
     updateData() {

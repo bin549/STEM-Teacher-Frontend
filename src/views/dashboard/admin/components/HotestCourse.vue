@@ -2,7 +2,7 @@
   <div>
     <el-card shadow="never" :body-style="{ padding: '0' }">
       <div slot="header">
-        <span>最新课程</span>
+        <span>最热课程</span>
       </div>
       <el-table
         v-loading="listLoading"
@@ -16,7 +16,7 @@
           <template slot-scope="{ row }">
             <div style="display: flex">
               <img
-                :src="row.cover"
+                :src="row.get_image"
                 style="width: 100px; height: 50px; margin-right: 10px"
               />
               <div
@@ -32,11 +32,9 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" width="150px" align="center">
+        <el-table-column label="选课人数" width="150px" align="center">
           <template slot-scope="{ row }">
-            <span>{{
-              row.created_time | parseTime("{y}-{m}-{d} {h}:{i}:{s}")
-            }}</span>
+            <span>3</span>
           </template>
         </el-table-column>
       </el-table>
@@ -60,12 +58,12 @@ export default {
   },
   created() {
     this.listLoading = true;
-    console.log(this.id);
     fetchCourses({
         id: this.id,
+        "is_sort": "yes",
     })
       .then((res) => {
-          console.log(res.data);
+      console.log(res.data);
         this.list = res.data;
 
       })

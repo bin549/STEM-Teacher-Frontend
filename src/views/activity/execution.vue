@@ -175,6 +175,7 @@
     >
       {{ execution_text }}
       <el-row>
+
         <el-col
           :span="8"
           v-for="({ img_url, img_preview_url }, index) of execution_image"
@@ -193,14 +194,12 @@
               <el-image
                 style="width: 130px; height: 130px"
                 :src="img_url"
-                :preview-src-list="img_preview_url"
               >
               </el-image>
             </div>
           </el-card>
         </el-col>
       </el-row>
-
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -209,7 +208,6 @@
         label-width="70px"
         style="margin-left: 50px"
       >
-
       <el-form-item label="Star" label-width="80px" prop="appraise_star">
           <el-rate v-model="temp.appraise_star"></el-rate>
       </el-form-item>
@@ -347,8 +345,10 @@ export default {
             this.execution_image = [];
             for (var i = 0; i < images.length; i++) {
               this.execution_image.push(
-                { img_url: images[i]["media"] },
-                { img_preview_url: [images[i]["media"]] }
+                  {
+                 img_url: images[i]["media"] ,
+                    img_preview_url: images[i]["media"]
+             }
               );
             }
           });
