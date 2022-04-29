@@ -188,9 +188,6 @@
             <el-button type="success" size="mini" @click="checkStudent(row)">
               学生名单
             </el-button>
-            <el-button type="warning" size="mini" @click="showSerialNumber(row)">
-              序列号
-            </el-button>
         </template>
   </el-table-column>
 
@@ -202,9 +199,9 @@
     class-name="small-padding fixed-width"
   >
         <template slot-scope="{ row, $index }">
-            <el-button type="warning" size="mini" @click="previewCourse(row)">
+            <!-- <el-button type="warning" size="mini" @click="previewCourse(row)">
               预览
-           </el-button>
+           </el-button> -->
             <el-button type="primary" size="mini" @click="handleUpdate(row)">
               编辑
             </el-button>
@@ -222,6 +219,9 @@
               @click="handleModifyStatus(row, 0)"
             >
               下架
+            </el-button>
+            <el-button type="warning" size="mini" @click="showSerialNumber(row)">
+              序列号
             </el-button>
             <el-popconfirm
               title="是否要删除该记录？"
