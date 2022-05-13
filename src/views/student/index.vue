@@ -106,81 +106,92 @@
           </el-popconfirm>
         </template>
       </el-table-column>
-
     </el-table>
 
-        <el-dialog
-          title="新增"
-          :visible.sync="dialogFormVisible"
-          v-loading="listLoading"
+    <el-dialog
+      title="新增"
+      :visible.sync="dialogFormVisible"
+      v-loading="listLoading"
+    >
+      <el-form
+        ref="dataForm"
+        :rules="rules"
+        :model="temp"
+        label-position="left"
+        label-width="70px"
+        style="margin-left: 50px"
+      >
+        <el-form-item label="学生序号" label-width="80px" prop="title">
+          <el-input v-model="temp.user_id" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="dialogFormVisible = false"> 取消 </el-button>
+        <el-button
+          type="primary"
+          @click="createData()"
+          :loading="dialogBtnLoading"
         >
-          <el-form
-            ref="dataForm"
-            :rules="rules"
-            :model="temp"
-            label-position="left"
-            label-width="70px"
-            style="margin-left: 50px"
-          >
-            <el-form-item label="学生序号" label-width="80px" prop="title">
-              <el-input v-model="temp.user_id" />
-            </el-form-item>
-          </el-form>
-          <div slot="footer">
-            <el-button @click="dialogFormVisible = false"> 取消 </el-button>
-            <el-button
-              type="primary"
-              @click="createData()"
-              :loading="dialogBtnLoading"
-            >
-              {{ dialogBtnLoading ? "提交中..." : "提交" }}
-            </el-button>
-          </div>
-        </el-dialog>
+          {{ dialogBtnLoading ? "提交中..." : "提交" }}
+        </el-button>
+      </div>
+    </el-dialog>
 
-
-            <el-dialog
-              title="学生信息"
-              :visible.sync="studentInfoDialogFormVisible"
-            >
-              <el-form
-                ref="dataForm"
-                label-position="left"
-                label-width="70px"
-                style="margin-left: 50px"
-              >
-                 <el-form-item label="学生ID">
-                       <el-input v-model="temp.id" disabled/>
-                   </el-form-item>
-                   <el-form-item label="学生名">
-                       <el-input v-model="temp.name" disabled/>
-                     </el-form-item>
-                     <el-form-item label="邮箱">
-                         <el-input v-model="temp.email" disabled/>
-                       </el-form-item>
-                   <el-form-item label="简介">
-                       <el-input type="textarea" v-model="temp.short_intro" disabled></el-input>
-                     </el-form-item>
-                     <el-form-item label="昵称">
-                         <el-input v-model="temp.username" disabled/>
-                       </el-form-item>
-                     <el-form-item label="创建日期">
-                         <el-date-picker type="date" placeholder="Pick a date" v-model="temp.created_time" style="width: 100%;" disabled></el-date-picker>
-                       </el-form-item>
-                         <el-form-item label="居住地址">
-                             <el-input v-model="temp.location" disabled/>
-                           </el-form-item>
-              </el-form>
-              <div slot="footer">
-                <el-button @click="studentInfoDialogFormVisible = false"> 取消 </el-button>
-              </div>
-            </el-dialog>
+    <el-dialog title="学生信息" :visible.sync="studentInfoDialogFormVisible">
+      <el-form
+        ref="dataForm"
+        label-position="left"
+        label-width="70px"
+        style="margin-left: 50px"
+      >
+        <el-form-item label="学生ID">
+          <el-input v-model="temp.id" disabled />
+        </el-form-item>
+        <el-form-item label="学生名">
+          <el-input v-model="temp.name" disabled />
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="temp.email" disabled />
+        </el-form-item>
+        <el-form-item label="简介">
+          <el-input
+            type="textarea"
+            v-model="temp.short_intro"
+            disabled
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="昵称">
+          <el-input v-model="temp.username" disabled />
+        </el-form-item>
+        <el-form-item label="创建日期">
+          <el-date-picker
+            type="date"
+            placeholder="Pick a date"
+            v-model="temp.created_time"
+            style="width: 100%"
+            disabled
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="居住地址">
+          <el-input v-model="temp.location" disabled />
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="studentInfoDialogFormVisible = false">
+          取消
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { fetchList } from "@/api/user";
-import { fetchCourseList, createSelection, deleteSelection } from "@/api/column";
+import {
+  fetchCourseList,
+  createSelection,
+  deleteSelection,
+} from "@/api/column";
 import waves from "@/directive/waves";
 import { mapGetters } from "vuex";
 
@@ -205,7 +216,7 @@ export default {
       },
       dialogFormVisible: false,
       studentInfoDialogFormVisible: false,
-     listLoading: true,
+      listLoading: true,
       rules: {
         user_id: [
           {
@@ -216,16 +227,16 @@ export default {
         ],
       },
       temp: {
-          user_id: '',
-          bio: '',
-          created_time: '',
-          email: '',
-          get_image: '',
-          id: '',
-          location: '',
-          name: '',
-          short_intro: '',
-          username: '',
+        user_id: "",
+        bio: "",
+        created_time: "",
+        email: "",
+        get_image: "",
+        id: "",
+        location: "",
+        name: "",
+        short_intro: "",
+        username: "",
       },
       dialogBtnLoading: false,
     };
@@ -267,21 +278,21 @@ export default {
       });
     },
     checkInfo(row, index) {
-        this.temp = Object.assign({}, row);
-        this.studentInfoDialogFormVisible = true;
+      this.temp = Object.assign({}, row);
+      this.studentInfoDialogFormVisible = true;
     },
     resetTemp() {
       this.temp = {
-          user_id: '',
-          bio: '',
-          created_time: '',
-          email: '',
-          get_image: '',
-          id: '',
-          location: '',
-          name: '',
-          short_intro: '',
-          username: '',
+        user_id: "",
+        bio: "",
+        created_time: "",
+        email: "",
+        get_image: "",
+        id: "",
+        location: "",
+        name: "",
+        short_intro: "",
+        username: "",
       };
     },
     handleCreate() {

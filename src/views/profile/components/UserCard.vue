@@ -29,7 +29,7 @@
         </div>
         <div class="user-bio-section-body">
           <div class="text-muted">
-              JS in Computer Science from the University of Technology
+            JS in Computer Science from the University of Technology
           </div>
         </div>
       </div>

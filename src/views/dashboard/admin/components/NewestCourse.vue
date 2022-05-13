@@ -61,13 +61,12 @@ export default {
   created() {
     this.listLoading = true;
     fetchCourses({
-        id: this.id,
-        "is_sort": "yes",
+      id: this.id,
+      is_sort: "yes",
     })
       .then((res) => {
-      console.log(res.data);
+        console.log(res.data);
         this.list = res.data;
-
       })
       .finally(() => {
         this.listLoading = false;

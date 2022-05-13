@@ -43,7 +43,6 @@
         </el-button>
       </div>
     </div>
-
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -89,22 +88,20 @@
       </el-table-column>
       <el-table-column label="结束时间" width="160px" align="center">
         <template slot-scope="{ row }">
-          <span>{{
-            row.end_time | parseTime("{y}-{m}-{d} {h}:{i}:{s}")
-          }}</span>
+          <span>{{ row.end_time | parseTime("{y}-{m}-{d} {h}:{i}:{s}") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="已提交" width="70px" align="center">
         <template slot-scope="{ row }">
           <el-tag type="success">
-              {{ row.id | doneExecutionCountFilter }}
-        </el-tag>
+            {{ row.id | doneExecutionCountFilter }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="未提交" width="70px" align="center">
         <template slot-scope="{ row }">
-            <el-tag type="danger">
-                {{ row.id | unDoneExecutionCountFilter }}
+          <el-tag type="danger">
+            {{ row.id | unDoneExecutionCountFilter }}
           </el-tag>
         </template>
       </el-table-column>
@@ -152,26 +149,49 @@
         </el-form-item>
         <el-form-item label="开始日期">
           <el-col :span="11">
-            <el-date-picker type="date" placeholder="Pick a date" v-model="temp.start_time" style="width: 100%;"></el-date-picker>
+            <el-date-picker
+              type="date"
+              placeholder="Pick a date"
+              v-model="temp.start_time"
+              style="width: 100%"
+            ></el-date-picker>
           </el-col>
           <el-col class="line" :span="2">-</el-col>
           <el-col :span="11">
-            <el-time-picker placeholder="Pick a time" v-model="temp.start_time" style="width: 100%;"></el-time-picker>
+            <el-time-picker
+              placeholder="Pick a time"
+              v-model="temp.start_time"
+              style="width: 100%"
+            ></el-time-picker>
           </el-col>
         </el-form-item>
         <el-form-item label="截止时间">
           <el-col :span="11">
-            <el-date-picker type="date" placeholder="Pick a date" v-model="temp.end_time" style="width: 100%;"></el-date-picker>
+            <el-date-picker
+              type="date"
+              placeholder="Pick a date"
+              v-model="temp.end_time"
+              style="width: 100%"
+            ></el-date-picker>
           </el-col>
           <el-col class="line" :span="2">-</el-col>
           <el-col :span="11">
-            <el-time-picker placeholder="Pick a time" v-model="temp.end_time" style="width: 100%;"></el-time-picker>
+            <el-time-picker
+              placeholder="Pick a time"
+              v-model="temp.end_time"
+              style="width: 100%"
+            ></el-time-picker>
           </el-col>
         </el-form-item>
         <el-form-item label="活动介绍" label-width="80px" prop="description">
-          <tinymce v-model="temp.description" :height="300" :width="600" v-if="dialogFormVisible"/>
+          <tinymce
+            v-model="temp.description"
+            :height="300"
+            :width="600"
+            v-if="dialogFormVisible"
+          />
         </el-form-item>
-    </el-form>
+      </el-form>
       <div slot="footer">
         <el-button @click="dialogFormVisible = false"> 取消 </el-button>
         <el-button
@@ -183,25 +203,26 @@
         </el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
-import { fetchAssignment, createAssignment, updateAssignment, deleteAssignmnet, fetchExecutionStatusCount } from "@/api/activity";
+import {
+  fetchAssignment,
+  createAssignment,
+  updateAssignment,
+  deleteAssignmnet,
+  fetchExecutionStatusCount,
+} from "@/api/activity";
 import { fetchCourseList } from "@/api/column";
 import { parseTime } from "@/utils";
 import { mapGetters } from "vuex";
 import Tinymce from "@/components/Tinymce";
 import waves from "@/directive/waves";
 
-const doneExecutionCountOptions = {
+const doneExecutionCountOptions = {};
 
-};
-
-const unDoneExecutionCountOptions = {
-
-};
+const unDoneExecutionCountOptions = {};
 
 let course_id = null;
 
@@ -214,9 +235,9 @@ export default {
     Tinymce,
   },
   filters: {
-      doneExecutionCountFilter(activity_id) {
-        return doneExecutionCountOptions[activity_id];
-      },
+    doneExecutionCountFilter(activity_id) {
+      return doneExecutionCountOptions[activity_id];
+    },
     unDoneExecutionCountFilter(activity_id) {
       return unDoneExecutionCountOptions[activity_id];
     },
@@ -275,28 +296,27 @@ export default {
     this.getList();
   },
   methods: {
-      fetchExecutionStatusCount() {
-          for (var i = 0; i < this.list.length; i++) {
-              let activity_id = this.list[i].id;
-              fetchExecutionStatusCount({
-                  id: this.list[i].id,
-                  is_done: true,
-              }).then((response) => {
-                  doneExecutionCountOptions[activity_id] = response.data;
-              })
-          }
+    fetchExecutionStatusCount() {
+      for (var i = 0; i < this.list.length; i++) {
+        let activity_id = this.list[i].id;
+        fetchExecutionStatusCount({
+          id: this.list[i].id,
+          is_done: true,
+        }).then((response) => {
+          doneExecutionCountOptions[activity_id] = response.data;
+        });
+      }
 
-          for (var i = 0; i < this.list.length; i++) {
-              let activity_id = this.list[i].id;
-              fetchExecutionStatusCount({
-                  id: this.list[i].id,
-                  is_done: false,
-              }).then((response) => {
-                  unDoneExecutionCountOptions[activity_id] = response.data;
-              })
-          }
-
-      },
+      for (var i = 0; i < this.list.length; i++) {
+        let activity_id = this.list[i].id;
+        fetchExecutionStatusCount({
+          id: this.list[i].id,
+          is_done: false,
+        }).then((response) => {
+          unDoneExecutionCountOptions[activity_id] = response.data;
+        });
+      }
+    },
 
     getCourseList() {
       this.currentSelectedCourse = course_id;
@@ -323,10 +343,10 @@ export default {
     },
     resetTemp() {
       this.temp = {
-          intro: "",
-          description: "",
-          start_time: "",
-          end_time: "",
+        intro: "",
+        description: "",
+        start_time: "",
+        end_time: "",
       };
     },
     handleCreate() {
@@ -337,24 +357,23 @@ export default {
     getSortClass() {},
 
     handleUpdate(row) {
-        this.temp = Object.assign({}, row);
-        this.dialogStatus = "update";
-        this.dialogFormVisible = true;
-        this.$nextTick(() => {
-          this.$refs["dataForm"].clearValidate();
-        });
+      this.temp = Object.assign({}, row);
+      this.dialogStatus = "update";
+      this.dialogFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs["dataForm"].clearValidate();
+      });
     },
     createData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           this.dialogBtnLoading = true;
-          if (this.currentSelectedCourse != null){
-              console.log(this.currentSelectedCourse);
-              this.temp["course"] = this.currentSelectedCourse;
+          if (this.currentSelectedCourse != null) {
+            console.log(this.currentSelectedCourse);
+            this.temp["course"] = this.currentSelectedCourse;
+          } else {
+            this.temp["course"] = course_id;
           }
-            else{
-                this.temp["course"] = course_id;
-            }
           createAssignment(this.temp)
             .then(() => {
               this.dialogFormVisible = false;
@@ -383,68 +402,65 @@ export default {
     },
 
     reload(row) {
-        if (this.currentSelectedCourse != null){
-          this.$router.push({
-            name: "Activity",
-            query: {
-              id: this.currentSelectedCourse,
-            },
-          });
-        }
-          else{
-            this.$router.push({
-              name: "Education",
-              query: {
-                id: course_id,
-              },
-            });
-          }
-
+      if (this.currentSelectedCourse != null) {
+        this.$router.push({
+          name: "Activity",
+          query: {
+            id: this.currentSelectedCourse,
+          },
+        });
+      } else {
+        this.$router.push({
+          name: "Education",
+          query: {
+            id: course_id,
+          },
+        });
+      }
     },
 
     updateData() {
-        this.$refs["dataForm"].validate((valid) => {
-            if (valid) {
-                this.dialogBtnLoading = true;
-                const tempData = Object.assign({}, this.temp);
-                updateAssignment(tempData)
-                .then(() => {
-                    const index = this.list.findIndex((v) => v.id === this.temp.id);
-                    this.list.splice(index, 1, this.temp);
-                    this.dialogFormVisible = false;
-                    this.$notify({
-                      title: "成功",
-                      message: "更新活动信息成功",
-                      type: "success",
-                      duration: 2000,
-                    });
-                })
-                .finally(() => {
-                    this.dialogBtnLoading = false;
-                });
-                console.log(this.temp);
-
-            }
-        });
+      this.$refs["dataForm"].validate((valid) => {
+        if (valid) {
+          this.dialogBtnLoading = true;
+          const tempData = Object.assign({}, this.temp);
+          updateAssignment(tempData)
+            .then(() => {
+              const index = this.list.findIndex((v) => v.id === this.temp.id);
+              this.list.splice(index, 1, this.temp);
+              this.dialogFormVisible = false;
+              this.$notify({
+                title: "成功",
+                message: "更新活动信息成功",
+                type: "success",
+                duration: 2000,
+              });
+            })
+            .finally(() => {
+              this.dialogBtnLoading = false;
+            });
+          console.log(this.temp);
+        }
+      });
     },
 
     handleDelete(row, index) {
-        this.listLoading = true;
-        deleteAssignmnet({
-          id: row.id,
-      }).then((response) => {
-            this.$notify({
-              title: "提示",
-              message: "删除成功",
-              type: "success",
-              duration: 2000,
-            });
-            this.list.splice(index, 1);
+      this.listLoading = true;
+      deleteAssignmnet({
+        id: row.id,
       })
-      .finally(() => {
+        .then((response) => {
+          this.$notify({
+            title: "提示",
+            message: "删除成功",
+            type: "success",
+            duration: 2000,
+          });
+          this.list.splice(index, 1);
+        })
+        .finally(() => {
           this.listLoading = false;
-      });
-
+        });
     },
   },
 };

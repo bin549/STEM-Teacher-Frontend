@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import Teleport from '@/components/ui/Teleport.vue'
+import Teleport from "@/components/ui/Teleport.vue";
 
 export default {
   props: {
@@ -47,11 +47,11 @@ export default {
     },
   },
   components: { Teleport },
-    provide() {
-      return {
-        parent: this
-      }
-    },
+  provide() {
+    return {
+      parent: this,
+    };
+  },
   emits: ["close"],
   methods: {
     tryClose() {

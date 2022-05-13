@@ -1,10 +1,10 @@
 <template>
   <div class="user-activity">
-      <ActivityExecution
-        v-for="execution in executions"
-        v-bind:execution="execution"
-      >
-  </ActivityExecution>
+    <ActivityExecution
+      v-for="execution in executions"
+      v-bind:execution="execution"
+    >
+    </ActivityExecution>
   </div>
 </template>
 
@@ -12,9 +12,7 @@
 import { mapGetters } from "vuex";
 import ActivityExecution from "@/components/activity/ActivityExecution.vue";
 
-import {
-  fetchExecutions,
-} from "@/api/activity.js";
+import { fetchExecutions } from "@/api/activity.js";
 
 export default {
   data() {
@@ -32,18 +30,16 @@ export default {
     ...mapGetters(["id"]),
   },
   methods: {
-      fetchExecutions() {
-          fetchExecutions({
-              owner_id: this.id,
-              is_excellent: true,
-          }
-        ).then((response) => {
-                this.executions = response.data;
-            })
-            .finally(() => {
-            }
-        );
-      },
+    fetchExecutions() {
+      fetchExecutions({
+        owner_id: this.id,
+        is_excellent: true,
+      })
+        .then((response) => {
+          this.executions = response.data;
+        })
+        .finally(() => {});
+    },
   },
 };
 </script>

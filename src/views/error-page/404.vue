@@ -13,7 +13,7 @@
           alt="404"
         />
         <img
-          class="pic-404__child mid"
+          class="pic-404__child mid" 
           src="@/assets/404_images/404_cloud.png"
           alt="404"
         />

@@ -8,16 +8,16 @@
 </template>
 
 <script>
-import BaseSpinner from '@/components/ui/BaseSpinner.vue';
+import BaseSpinner from "@/components/ui/BaseSpinner.vue";
 
 export default {
   name: "App",
-    components: {
-      BaseSpinner,
-    },
+  components: {
+    BaseSpinner,
+  },
   data() {
     return {
-        isLoading: false,
+      isLoading: false,
       isRouterAlive: true,
     };
   },
@@ -30,11 +30,11 @@ export default {
     reload() {
       this.isRouterAlive = false;
       this.$nextTick(function () {
-          this.isLoading = true;
+        this.isLoading = true;
         setTimeout(() => {
           this.isRouterAlive = true;
           this.isLoading = false;
-      }, 300);
+        }, 300);
       });
     },
     sleep(milliseconds) {
@@ -46,8 +46,6 @@ export default {
     },
   },
 };
-
-
 </script>
 
 <style>

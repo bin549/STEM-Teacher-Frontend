@@ -97,9 +97,9 @@ export default {
 </script>
 
 <style>
-  .prism-player {
-    height: 600px !important;
-  }
+.prism-player {
+  height: 600px !important;
+}
 @media (max-width: 450px) {
   .prism-player {
     height: 200px !important;

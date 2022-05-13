@@ -17,31 +17,26 @@
 </template>
 
 <script>
-import {
-  fetchActivityLog,
-} from "@/api/activity";
+import { fetchActivityLog } from "@/api/activity";
 import { parseTime } from "@/utils";
 
 export default {
   data() {
     return {
-      timeline: [
-      ],
+      timeline: [],
     };
   },
   created() {
     this.fetchActivityLog();
   },
   methods: {
-      fetchActivityLog() {
-          fetchActivityLog()
-          .then((res) => {
-              this.timeline = res.data;
-          })
-          .finally(() => {
-            });
-       },
-
+    fetchActivityLog() {
+      fetchActivityLog()
+        .then((res) => {
+          this.timeline = res.data;
+        })
+        .finally(() => {});
+    },
   },
 };
 </script>

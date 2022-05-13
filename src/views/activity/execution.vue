@@ -112,7 +112,7 @@
               justify-content: space-between;
             "
           >
-              <span>{{ row.appraise_text }}</span>
+            <span>{{ row.appraise_text }}</span>
           </div>
         </template>
       </el-table-column>
@@ -175,7 +175,6 @@
     >
       {{ execution_text }}
       <el-row>
-
         <el-col
           :span="8"
           v-for="({ img_url, img_preview_url }, index) of execution_image"
@@ -191,10 +190,7 @@
                 cursor: pointer;
               "
             >
-              <el-image
-                style="width: 130px; height: 130px"
-                :src="img_url"
-              >
+              <el-image style="width: 130px; height: 130px" :src="img_url">
               </el-image>
             </div>
           </el-card>
@@ -208,19 +204,19 @@
         label-width="70px"
         style="margin-left: 50px"
       >
-      <el-form-item label="Star" label-width="80px" prop="appraise_star">
+        <el-form-item label="Star" label-width="80px" prop="appraise_star">
           <el-rate v-model="temp.appraise_star"></el-rate>
-      </el-form-item>
-
-        <el-form-item label="Text" label-width="80px" prop="appraise_text">
-            <el-input
-              type="textarea"
-              :rows="2"
-              placeholder="Please input"
-              v-model="temp.appraise_text">
-            </el-input>
         </el-form-item>
 
+        <el-form-item label="Text" label-width="80px" prop="appraise_text">
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="Please input"
+            v-model="temp.appraise_text"
+          >
+          </el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button @click="dialogFormVisible = false"> 取消 </el-button>
@@ -279,17 +275,17 @@ export default {
         page: 1,
       },
       temp: {
-          appraise_star: 0,
-          appraise_text: "",
+        appraise_star: 0,
+        appraise_text: "",
       },
       rules: {
-          appraise_text: [
-            {
-              required: true,
-              message: "不能为空",
-              trigger: "blur",
-            },
-          ],
+        appraise_text: [
+          {
+            required: true,
+            message: "不能为空",
+            trigger: "blur",
+          },
+        ],
       },
       postStatus: ["Yes", "No"],
       studentsList: [],
@@ -344,12 +340,10 @@ export default {
             let images = response.data;
             this.execution_image = [];
             for (var i = 0; i < images.length; i++) {
-              this.execution_image.push(
-                  {
-                 img_url: images[i]["media"] ,
-                    img_preview_url: images[i]["media"]
-             }
-              );
+              this.execution_image.push({
+                img_url: images[i]["media"],
+                img_preview_url: images[i]["media"],
+              });
             }
           });
         // this.previewMedia = res.data["media"],
