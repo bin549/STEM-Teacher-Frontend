@@ -758,7 +758,6 @@ export default {
         if (valid) {
           this.dialogBtnLoading = true;
           this.temp["course"] = id;
-          console.log(this.temp);
           createLecture(this.temp)
             .then(() => {
               this.dialogFormVisible = false;
