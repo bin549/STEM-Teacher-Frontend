@@ -3,7 +3,15 @@ import axios from '@/utils/http'
 
 export function fetchCourses(query) {
     return axios({
-      url: '/api/getCourseByUserId/',
+      url: '/api/getCoursesByOwnerId/',
+      method: 'get',
+      params: query
+  })
+}
+
+export function fetchCourseList(query) {
+    return axios({
+      url: '/api/getCoursesByOwnerId/',
       method: 'get',
       params: query
   })
@@ -12,15 +20,6 @@ export function fetchCourses(query) {
 export function fetchGenresList(query) {
     return axios({
       url: '/api/getGenres/',
-      method: 'get',
-      params: query
-  })
-}
-
-
-export function fetchCourseList(query) {
-    return axios({
-      url: '/api/getCourseByUserId/',
       method: 'get',
       params: query
   })

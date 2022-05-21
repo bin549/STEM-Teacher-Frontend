@@ -18,6 +18,7 @@
               <img
                 :src="row.get_image"
                 style="width: 100px; height: 50px; margin-right: 10px"
+                @click="previewLecture(row.get_image)"
               />
               <div
                 style="
@@ -43,6 +44,7 @@
     </el-card>
   </div>
 </template>
+
 <script>
 import { fetchCourses } from "@/api/column";
 import { parseTime } from "@/utils";
@@ -62,7 +64,7 @@ export default {
     this.listLoading = true;
     fetchCourses({
       id: this.id,
-      is_sort: "yes",
+      sort: "created_time",
     })
       .then((res) => {
         console.log(res.data);

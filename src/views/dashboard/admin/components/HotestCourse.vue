@@ -16,7 +16,7 @@
           <template slot-scope="{ row }">
             <div style="display: flex">
               <img
-                :src="row.get_image"
+                :src="row.id"
                 style="width: 100px; height: 50px; margin-right: 10px"
               />
               <div
@@ -34,7 +34,7 @@
         </el-table-column>
         <el-table-column label="选课人数" width="150px" align="center">
           <template slot-scope="{ row }">
-            <span>3</span>
+            <span>{{ row.count }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -60,11 +60,11 @@ export default {
     this.listLoading = true;
     fetchCourses({
       id: this.id,
-      is_sort: "yes",
+      sort: "count",
     })
       .then((res) => {
-        console.log(res.data);
         this.list = res.data;
+        console.log(this.list);
       })
       .finally(() => {
         this.listLoading = false;

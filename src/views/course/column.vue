@@ -526,7 +526,6 @@ export default {
         this.listLoading = false;
       });
     },
-    //
     setCountOptions(course_id) {
       fetchStudentCount({
         course_id: course_id,

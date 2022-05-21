@@ -11,7 +11,6 @@
 <script>
 import { mapGetters } from "vuex";
 import ActivityExecution from "@/components/activity/ActivityExecution.vue";
-
 import { fetchExecutions } from "@/api/activity.js";
 
 export default {

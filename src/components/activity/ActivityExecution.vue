@@ -4,14 +4,14 @@
       <img class="img-circle" :src="user.get_image" />
       <span class="username text-muted">{{ user.name }}</span>
       <span class="description"
-        >Shared publicly - {{ execution.finish_time | parseTime }}</span
+        >发布于 - {{ execution.finish_time | parseTime }}</span
       >
     </div>
     <p>
       {{ execution.content_text }}
     </p>
     <div class="user-images" v-if="!!execution_medias.length">
-      <el-carousel :interval="6000" type="card" height="140px">
+      <el-carousel :interval="6000" type="card" height="170px">
         <el-carousel-item
           v-for="(item, index) in execution_medias"
           :key="index"
@@ -67,6 +67,12 @@ export default {
 };
 </script>
 
+<style>
+.el-carousel__indicators--outside {
+    margin-top: 20px;
+}
+</style>
+
 <style lang="scss" scoped>
 .user-activity {
   .user-block {
@@ -94,36 +100,30 @@ export default {
       font-size: 12px;
     }
   }
-
   .post {
-    font-size: 14px;
+    font-size: 15px;
     border-bottom: 1px solid #d2d6de;
-    margin-bottom: 15px;
+    margin-bottom: 40px;
     padding-bottom: 15px;
     color: #666;
-
     .image {
       width: 100%;
       height: 100%;
     }
-
     .user-images {
       padding-top: 20px;
     }
   }
-
   .list-inline {
     padding-left: 0;
     margin-left: -5px;
     list-style: none;
-
     li {
       display: inline-block;
       padding-right: 5px;
       padding-left: 5px;
       font-size: 13px;
     }
-
     .link-black {
       &:hover,
       &:focus {
@@ -141,4 +141,5 @@ export default {
 .text-muted {
   color: #777;
 }
+
 </style>

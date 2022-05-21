@@ -30,7 +30,6 @@
       >
         搜索
       </el-button>
-
       <el-button
         v-waves
         class="filter-item"
@@ -167,7 +166,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <el-dialog
       title="Check"
       :visible.sync="dialogFormVisible"
@@ -207,7 +205,6 @@
         <el-form-item label="Star" label-width="80px" prop="appraise_star">
           <el-rate v-model="temp.appraise_star"></el-rate>
         </el-form-item>
-
         <el-form-item label="Text" label-width="80px" prop="appraise_text">
           <el-input
             type="textarea"

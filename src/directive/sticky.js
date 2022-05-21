@@ -7,7 +7,6 @@ vueSticky.install = Vue => {
       const stickyTop = params.stickyTop || 0
       const zIndex = params.zIndex || 1000
       const elStyle = el.style
-
       elStyle.position = '-webkit-sticky'
       elStyle.position = 'sticky'
       // if the browser support css sticky（Currently Safari, Firefox and Chrome Canary）
@@ -19,16 +18,13 @@ vueSticky.install = Vue => {
       const elHeight = el.getBoundingClientRect().height
       const elWidth = el.getBoundingClientRect().width
       elStyle.cssText = `top: ${stickyTop}px; z-index: ${zIndex}`
-
       const parentElm = el.parentNode || document.documentElement
       const placeholder = document.createElement('div')
       placeholder.style.display = 'none'
       placeholder.style.width = `${elWidth}px`
       placeholder.style.height = `${elHeight}px`
       parentElm.insertBefore(placeholder, el)
-
       let active = false
-
       const getScroll = (target, top) => {
         const prop = top ? 'pageYOffset' : 'pageXOffset'
         const method = top ? 'scrollTop' : 'scrollLeft'
@@ -38,7 +34,6 @@ vueSticky.install = Vue => {
         }
         return ret
       }
-
       const sticky = () => {
         if (active) {
           return
@@ -46,23 +41,19 @@ vueSticky.install = Vue => {
         if (!elStyle.height) {
           elStyle.height = `${el.offsetHeight}px`
         }
-
         elStyle.position = 'fixed'
         elStyle.width = `${elWidth}px`
         placeholder.style.display = 'inline-block'
         active = true
       }
-
       const reset = () => {
         if (!active) {
           return
         }
-
         elStyle.position = ''
         placeholder.style.display = 'none'
         active = false
       }
-
       const check = () => {
         const scrollTop = getScroll(window, true)
         const offsetTop = el.getBoundingClientRect().top
@@ -77,10 +68,8 @@ vueSticky.install = Vue => {
       listenAction = () => {
         check()
       }
-
       window.addEventListener('scroll', listenAction)
     },
-
     unbind() {
       window.removeEventListener('scroll', listenAction)
     }

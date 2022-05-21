@@ -107,7 +107,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <el-dialog
       title="新增"
       :visible.sync="dialogFormVisible"
@@ -136,7 +135,6 @@
         </el-button>
       </div>
     </el-dialog>
-
     <el-dialog title="学生信息" :visible.sync="studentInfoDialogFormVisible">
       <el-form
         ref="dataForm"
