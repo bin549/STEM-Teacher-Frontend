@@ -1,22 +1,24 @@
 <template>
-  <div class="user-activity">
-    <ActivityExecution
-      v-for="execution in executions"
-      v-bind:execution="execution"
-    >
-    </ActivityExecution>
-  </div>
+    <div class="user-activity">
+      <ActivityExecution
+        v-for="execution in executions"
+        v-bind:execution="execution"
+      >
+      </ActivityExecution>
+    </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import ActivityExecution from "@/components/activity/ActivityExecution.vue";
 import { fetchExecutions } from "@/api/activity.js";
+import errGif from "@/assets/401_images/401.gif";
 
 export default {
   data() {
     return {
       executions: [],
+      errGif: errGif + "?" + +new Date(),
     };
   },
   created() {

@@ -16,7 +16,10 @@
           v-for="(item, index) in execution_medias"
           :key="index"
         >
-          <img :src="item.get_media" class="image" />
+          <el-image :src="item.get_media" class="image"
+              @click="previewImage(item.get_media, index)"
+              :preview-src-list="srcList"
+          />
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -39,6 +42,8 @@ export default {
       avatarPrefix,
       carouselPrefix,
       user: null,
+      previewMedia: false,
+      srcList: [],
     };
   },
   props: {
@@ -49,11 +54,17 @@ export default {
     this.fetchStudent();
   },
   methods: {
+      previewImage(media, index) {
+          this.previewMedia = this.srcList[index];
+      },
     fetchExecutionImages() {
       fetchExecutionMedias({
         id: this.execution.id,
       }).then((response) => {
         this.execution_medias = response.data;
+        for (var i = 0; i < this.execution_medias.length; i++) {
+          this.srcList.push(this.execution_medias[i]["media"]);
+        }
       });
     },
     fetchStudent() {
