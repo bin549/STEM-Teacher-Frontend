@@ -18,7 +18,8 @@
               <img
                 :src="row.get_image"
                 style="width: 100px; height: 50px; margin-right: 10px"
-                @click="previewLecture(row.get_image)"
+                @click="checkCourse(row.id)"
+                class="course_cover"
               />
               <div
                 style="
@@ -74,5 +75,24 @@ export default {
         this.listLoading = false;
       });
   },
+  methods: {
+      checkCourse(course_id) {
+          this.$router.push({
+            name: "Lecture",
+            query: {
+              id: course_id,
+            },
+          });
+      },
+  },
 };
 </script>
+
+<style lang="scss">
+.course_cover {
+    cursor: pointer;
+    &:hover {
+    opacity: 0.5;
+    }
+}
+</style>

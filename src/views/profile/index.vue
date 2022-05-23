@@ -45,6 +45,9 @@ export default {
         email: "admin@test.com",
         avatar: this.avatar,
       };
+      console.log(this.id);
+
+      
     },
   },
 };

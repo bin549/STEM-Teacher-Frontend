@@ -167,11 +167,13 @@
       </el-table-column>
     </el-table>
     <el-dialog
-      title="Check"
+      title="作业批改"
       :visible.sync="dialogFormVisible"
       v-loading="listLoading"
     >
-      {{ execution_text }}
+    <p class="execution-text">
+        {{ execution_text }}121
+    </p>
       <el-row>
         <el-col
           :span="8"
@@ -188,8 +190,11 @@
                 cursor: pointer;
               "
             >
-              <el-image style="width: 130px; height: 130px" :src="img_url">
-              </el-image>
+              <el-image style="width: 130px; height: 130px" :src="img_url"
+              @click="previewImage(img_url, index)"
+              :preview-src-list="srcList"
+              ></el-image>
+
             </div>
           </el-card>
         </el-col>
@@ -202,10 +207,10 @@
         label-width="70px"
         style="margin-left: 50px"
       >
-        <el-form-item label="Star" label-width="80px" prop="appraise_star">
+        <el-form-item label="评分" label-width="80px" prop="appraise_star">
           <el-rate v-model="temp.appraise_star"></el-rate>
         </el-form-item>
-        <el-form-item label="Text" label-width="80px" prop="appraise_text">
+        <el-form-item label="评语" label-width="80px" prop="appraise_text">
           <el-input
             type="textarea"
             :rows="2"
@@ -290,6 +295,9 @@ export default {
       listLoading: false,
       dialogBtnLoading: false,
       dialogStatus: false,
+      previewMedia: false,
+      srcList: [
+      ],
     };
   },
   created() {
@@ -305,6 +313,9 @@ export default {
     },
   },
   methods: {
+      previewImage(media, index) {
+          this.previewMedia = this.srcList[index];
+      },
     getStudentsList() {
       this.listLoading = true;
       fetchList().then((response) => {
@@ -330,34 +341,27 @@ export default {
     checkExecution(row) {
       this.dialogFormVisible = true;
       this.temp = Object.assign({}, row);
+      this.execution_text = this.temp["content_text"]
       this.temp["mode"] = "check";
       fetchExecution(this.temp).then((res) => {
-        (this.execution_text = res.data["content_text"]),
           fetchExecutionImage({ id: this.temp["id"] }).then((response) => {
             let images = response.data;
             this.execution_image = [];
+            this.srcList = [];
             for (var i = 0; i < images.length; i++) {
               this.execution_image.push({
                 img_url: images[i]["media"],
                 img_preview_url: images[i]["media"],
               });
+              this.srcList.push(images[i]["media"]);
             }
           });
-        // this.previewMedia = res.data["media"],
-        // this.previewFormat = formatOptions[res.data["format"]],
         this.$message({
           message: "操作成功",
           type: "success",
         });
       });
     },
-
-    //
-    //    .finally(() => {
-    //        this.listLoading = false;
-    //      });
-    // },
-
     updateAppraise() {
       this.listLoading = true;
       updateExecution(this.temp)
@@ -372,9 +376,7 @@ export default {
           this.listLoading = false;
         });
     },
-
     handleFilter() {},
-
     handleExcellentStatus(row, status) {
       this.listLoading = true;
       updateExecution({
@@ -405,3 +407,9 @@ export default {
   },
 };
 </script>
+
+<style media="screen">
+    .execution-text {
+        font-size: 18px;
+    }
+</style>
