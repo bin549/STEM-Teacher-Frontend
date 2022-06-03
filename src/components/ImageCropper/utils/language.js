@@ -63,14 +63,12 @@ export default {
     success: 'S-a încărcat cu succes',
     fail: 'A apărut o problemă la încărcare',
     preview: 'Previzualizează',
-
     btn: {
       off: 'Anulează',
       close: 'Închide',
       back: 'Înapoi',
       save: 'Salvează'
     },
-
     error: {
       onlyImg: 'Doar imagini',
       outOfSize: 'Imaginea depășește limita de: ',

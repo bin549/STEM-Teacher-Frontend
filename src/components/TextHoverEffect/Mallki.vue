@@ -22,8 +22,6 @@ export default {
 </script>
 
 <style>
-/* Mallki */
-
 .link--mallki {
   font-weight: 800;
   color: #4dd9d5;
@@ -37,13 +35,11 @@ export default {
   outline: none;
   text-decoration: none;
 }
-
 .link--mallki:hover {
   -webkit-transition: none;
   transition: none;
   color: transparent;
 }
-
 .link--mallki::before {
   content: '';
   width: 100%;
@@ -60,12 +56,10 @@ export default {
   -webkit-transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
   transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
 }
-
 .link--mallki:hover::before {
   -webkit-transform: translate3d(100%, 0, 0);
   transform: translate3d(100%, 0, 0);
 }
-
 .link--mallki span {
   position: absolute;
   height: 50%;

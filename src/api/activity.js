@@ -17,6 +17,14 @@ export function fetchExecution(query) {
   })
 }
 
+export function fetchUncheckExecutionCount(query) {
+    return axios({
+      url: '/api/getUncheckExecutionCount/',
+      method: 'get',
+      params: query
+  })
+}
+
 export function updateExecution(data) {
     return axios({
         url: '/api/updateExecution/',

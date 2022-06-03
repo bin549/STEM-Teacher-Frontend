@@ -32,7 +32,6 @@ const carouselPrefix = "?imageView2/2/h/440";
 
 import { fetchExecutionMedias } from "@/api/activity.js";
 import { parseTime } from "@/utils";
-
 import { fetchStudent } from "@/api/user.js";
 
 export default {
@@ -143,14 +142,11 @@ export default {
     }
   }
 }
-
 .box-center {
   margin: 0 auto;
   display: table;
 }
-
 .text-muted {
   color: #777;
 }
-
 </style>

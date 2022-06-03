@@ -24,7 +24,6 @@ export default {
   },
   watch: {
     $route(route) {
-      // if you go to the redirect page, do not update the breadcrumbs
       if (route.path.startsWith("/redirect/")) {
         return;
       }
@@ -36,7 +35,6 @@ export default {
   },
   methods: {
     getBreadcrumb() {
-      // only show routes with meta.title
       let matched = this.$route.matched.filter(
         (item) => item.meta && item.meta.title
       );
@@ -60,7 +58,6 @@ export default {
       );
     },
     pathCompile(path) {
-      // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
       const { params } = this.$route;
       var toPath = pathToRegexp.compile(path);
       return toPath(params);
@@ -83,7 +80,6 @@ export default {
   font-size: 14px;
   line-height: 50px;
   margin-left: 8px;
-
   .no-redirect {
     color: #97a8be;
     cursor: text;

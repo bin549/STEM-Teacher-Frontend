@@ -112,9 +112,9 @@
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row, $index }">
-          <el-button type="warning" size="mini" @click="checkAssignment(row)">
-            批改
-          </el-button>
+        <el-button type="warning" size="mini" @click="checkAssignment(row)">
+          批改
+        </el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
@@ -130,7 +130,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <el-dialog
       :title="textMap[dialogStatus]"
       :visible.sync="dialogFormVisible"
@@ -221,7 +220,6 @@ import Tinymce from "@/components/Tinymce";
 import waves from "@/directive/waves";
 
 const doneExecutionCountOptions = {};
-
 const unDoneExecutionCountOptions = {};
 
 let course_id = null;
@@ -306,7 +304,6 @@ export default {
           doneExecutionCountOptions[activity_id] = response.data;
         });
       }
-
       for (var i = 0; i < this.list.length; i++) {
         let activity_id = this.list[i].id;
         fetchExecutionStatusCount({
@@ -317,7 +314,6 @@ export default {
         });
       }
     },
-
     getCourseList() {
       this.currentSelectedCourse = course_id;
       this.listLoading = true;

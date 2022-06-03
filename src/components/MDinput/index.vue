@@ -110,12 +110,9 @@
 </template>
 
 <script>
-// source:https://github.com/wemake-services/vue-material-input/blob/master/src/components/MaterialInput.vue
-
 export default {
   name: 'MdInput',
   props: {
-    /* eslint-disable */
     icon: String,
     name: String,
     type: {
@@ -156,7 +153,7 @@ export default {
       return {
         'material--active': this.focus,
         'material--disabled': this.disabled,
-        'material--raised': Boolean(this.focus || this.currentValue) // has value
+        'material--raised': Boolean(this.focus || this.currentValue)
       }
     }
   },
@@ -198,26 +195,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  // Fonts:
   $font-size-base: 16px;
   $font-size-small: 18px;
   $font-size-smallest: 12px;
   $font-weight-normal: normal;
   $font-weight-bold: bold;
   $apixel: 1px;
-  // Utils
   $spacer: 12px;
   $transition: 0.2s ease all;
   $index: 0px;
   $index-has-icon: 30px;
-  // Theme:
   $color-white: white;
   $color-grey: #9E9E9E;
   $color-grey-light: #E0E0E0;
   $color-blue: #2196F3;
   $color-red: #F44336;
   $color-black: black;
-  // Base clases:
   %base-bar-pseudo {
     content: '';
     height: 1px;
@@ -226,16 +219,12 @@ export default {
     position: absolute;
     transition: $transition;
   }
-
-  // Mixins:
   @mixin slided-top() {
     top: - ($font-size-base + $spacer);
     left: 0;
     font-size: $font-size-base;
     font-weight: $font-weight-bold;
   }
-
-  // Component:
   .material-input__component {
     margin-top: 36px;
     position: relative;
@@ -273,7 +262,7 @@ export default {
       &:focus {
         outline: none;
         border: none;
-        border-bottom: 1px solid transparent; // fixes the height issue
+        border-bottom: 1px solid transparent;
       }
     }
     .material-label {
@@ -298,19 +287,16 @@ export default {
         right: 50%;
       }
     }
-    // Disabled state:
     &.material--disabled {
       .material-input {
         border-bottom-style: dashed;
       }
     }
-    // Raised state:
     &.material--raised {
       .material-label {
         @include slided-top();
       }
     }
-    // Active state:
     &.material--active {
       .material-input-bar {
         &:before,
@@ -320,7 +306,6 @@ export default {
       }
     }
   }
-
   .material-input__component {
     background: $color-white;
     .material-input {
@@ -338,13 +323,11 @@ export default {
         background: $color-blue;
       }
     }
-    // Active state:
     &.material--active {
       .material-label {
         color: $color-blue;
       }
     }
-    // Errors:
     &.material--has-errors {
       &.material--active .material-label {
         color: $color-red;

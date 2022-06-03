@@ -239,7 +239,6 @@
         </template>
 </el-table-column>
 </el-table>
-
 <el-dialog
   :title="textMap[dialogStatus]"
   :visible.sync="dialogFormVisible"
@@ -360,11 +359,8 @@ const statusOptions = {
 };
 
 const genresOptions = {};
-
 const formatOptions = {};
-
 const studentCountOptions = {};
-
 const lectureCountOptions = {};
 
 export default {
@@ -380,7 +376,6 @@ export default {
     studentCountFilter(course_id) {
       return studentCountOptions[course_id];
     },
-
     lectureCountFilter(course_id) {
       return lectureCountOptions[course_id];
     },

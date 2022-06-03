@@ -8,13 +8,13 @@
 </template>
 
 <script>
-const version = require('element-ui/package.json').version // element-ui version from node_modules
-const ORIGINAL_THEME = '#409EFF' // default color
+const version = require('element-ui/package.json').version
+const ORIGINAL_THEME = '#409EFF'
 
 export default {
   data() {
     return {
-      chalk: '', // content of theme-chalk css
+      chalk: '',
       theme: ''
     }
   },
@@ -49,7 +49,6 @@ export default {
         return () => {
           const originalCluster = this.getThemeCluster(ORIGINAL_THEME.replace('#', ''))
           const newStyle = this.updateStyle(this[variable], originalCluster, themeCluster)
-
           let styleTag = document.getElementById(id)
           if (!styleTag) {
             styleTag = document.createElement('style')
@@ -59,16 +58,12 @@ export default {
           styleTag.innerText = newStyle
         }
       }
-
       if (!this.chalk) {
         const url = `https://unpkg.com/element-ui@${version}/lib/theme-chalk/index.css`
         await this.getCSSString(url, 'chalk')
       }
-
       const chalkHandler = getHandler('chalk', 'chalk-style')
-
       chalkHandler()
-
       const styles = [].slice.call(document.querySelectorAll('style'))
         .filter(style => {
           const text = style.innerText
@@ -79,9 +74,7 @@ export default {
         if (typeof innerText !== 'string') return
         style.innerText = this.updateStyle(innerText, originalCluster, themeCluster)
       })
-
       this.$emit('change', val)
-
       $message.close()
     }
   },
@@ -94,7 +87,6 @@ export default {
       })
       return newStyle
     },
-
     getCSSString(url, variable) {
       return new Promise(resolve => {
         const xhr = new XMLHttpRequest()

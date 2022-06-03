@@ -139,29 +139,38 @@
             检查
           </el-button>
           <el-button
-            v-if="row.is_excellent == 0 && row.finish_time == null"
-            size="mini"
-            type="success"
-            @click="handleExcellentStatus(row, 1)"
-            disabled
-          >
-            评优
-          </el-button>
-          <el-button
-            v-if="row.is_excellent == 0 && row.finish_time != null"
-            size="mini"
-            type="success"
-            @click="handleExcellentStatus(row, 1)"
-          >
-            评优
-          </el-button>
-          <el-button
             v-if="row.is_excellent == 1"
             size="mini"
             @click="handleExcellentStatus(row, 0)"
             disabled
           >
             已评优
+          </el-button>
+          <el-button
+            v-else-if="row.finish_time == null"
+            size="mini"
+            type="success"
+            @click="handleExcellentStatus(row, 1)"
+            disabled
+          >
+            评优
+          </el-button>
+          <el-button
+            v-else-if="row.appraise_star == 0"
+            size="mini"
+            type="success"
+            @click="handleExcellentStatus(row, 1)"
+            disabled
+          >
+            评优
+          </el-button>
+          <el-button
+            v-else
+            size="mini"
+            type="success"
+            @click="handleExcellentStatus(row, 1)"
+          >
+            评优
           </el-button>
         </template>
       </el-table-column>
@@ -194,7 +203,6 @@
               @click="previewImage(img_url, index)"
               :preview-src-list="srcList"
               ></el-image>
-
             </div>
           </el-card>
         </el-col>
@@ -214,7 +222,7 @@
           <el-input
             type="textarea"
             :rows="2"
-            placeholder="Please input"
+            placeholder=""
             v-model="temp.appraise_text"
           >
           </el-input>
@@ -335,9 +343,7 @@ export default {
         this.listLoading = false;
       });
     },
-
     getSortClass() {},
-
     checkExecution(row) {
       this.dialogFormVisible = true;
       this.temp = Object.assign({}, row);
@@ -356,10 +362,6 @@ export default {
               this.srcList.push(images[i]["media"]);
             }
           });
-        this.$message({
-          message: "操作成功",
-          type: "success",
-        });
       });
     },
     updateAppraise() {

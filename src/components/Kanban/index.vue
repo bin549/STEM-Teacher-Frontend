@@ -59,7 +59,6 @@ export default {
   overflow: hidden;
   background: #f0f0f0;
   border-radius: 3px;
-
   .board-column-header {
     height: 50px;
     line-height: 50px;
@@ -70,7 +69,6 @@ export default {
     color: #fff;
     border-radius: 3px 3px 0 0;
   }
-
   .board-column-content {
     height: auto;
     overflow: hidden;
@@ -80,7 +78,6 @@ export default {
     justify-content: flex-start;
     flex-direction: column;
     align-items: center;
-
     .board-item {
       cursor: pointer;
       width: 100%;
@@ -96,4 +93,3 @@ export default {
   }
 }
 </style>
-

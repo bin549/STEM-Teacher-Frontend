@@ -54,23 +54,19 @@ export default {
       margin-left: 50px;
       padding: 2px 0;
     }
-
     .username {
       font-size: 16px;
       color: #000;
     }
-
     :after {
       clear: both;
     }
-
     .img-circle {
       border-radius: 50%;
       width: 40px;
       height: 40px;
       float: left;
     }
-
     span {
       font-weight: 500;
       font-size: 12px;
