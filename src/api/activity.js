@@ -26,7 +26,7 @@ export function fetchAssignment(query) {
   return axios({
     url: '/api/assignment/get/',
     method: 'get',
-    params: query
+    params: query 
   })
 }
 export function updateExecution(data) {
