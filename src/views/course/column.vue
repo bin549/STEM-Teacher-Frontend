@@ -335,14 +335,13 @@
 
 <script>
 import {
-  fetchCourses,
   createCourse,
   deleteCourse,
-  updateStatus,
-  fetchFormatsList,
-  fetchGenresList,
   updateCourse,
-  fetchPreviewLecture,
+  fetchCourses,
+  fetchFormats,
+  fetchGenres,
+  fetchLecture,
   fetchLectureCount,
 } from "@/api/column";
 import { fetchStudentCount } from "@/api/user";
@@ -464,7 +463,7 @@ export default {
   methods: {
     getGenresList() {
       this.listLoading = true;
-      fetchGenresList().then((response) => {
+      fetchGenres().then((response) => {
         this.genresList = response.data;
         for (var genre in this.genresList) {
           genresOptions[this.genresList[genre].id] =
@@ -475,7 +474,7 @@ export default {
     },
     getFormatsList() {
       this.listLoading = true;
-      fetchFormatsList().then((response) => {
+      fetchFormats().then((response) => {
         let formats = response.data;
         for (var format in formats) {
           formatOptions[formats[format].id] = formats[format].name;
@@ -591,10 +590,9 @@ export default {
     },
     handleModifyStatus(row, status) {
       this.listLoading = true;
-      updateStatus({
+      updateCourse({
         id: row.id,
-        status,
-        update: "status",
+        is_visible: status,
       })
         .then((res) => {
           this.$message({
@@ -723,9 +721,9 @@ export default {
     previewCourse(row) {
       this.listLoading = true;
       this.previewDialogVisible = true;
-      fetchPreviewLecture({
+      fetchLecture({
         id: row.id,
-        mode: "preview",
+        is_preview: true,
       })
         .then((res) => {
           (this.previewMedia = res.data["media"]),

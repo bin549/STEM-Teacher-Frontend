@@ -65,7 +65,7 @@ export default {
     this.listLoading = true;
     fetchCourses({
       id: this.id,
-      sort: "created_time",
+      sort_by: "created_time",
     })
       .then((res) => {
         console.log(res.data);

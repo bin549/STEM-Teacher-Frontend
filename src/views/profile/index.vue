@@ -46,8 +46,6 @@ export default {
         avatar: this.avatar,
       };
       console.log(this.id);
-
-      
     },
   },
 };

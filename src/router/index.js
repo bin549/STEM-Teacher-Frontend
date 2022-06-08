@@ -70,92 +70,88 @@ export const asyncRoutes = [
     path: '/course',
     component: Layout,
     children: [
-        {
-            path: "column",
-            name: "Column",
-            component: () =>
-                import('@/views/course/column'),
-                meta: { title: '课程管理', icon: 'education', noCache: true }
-            },
-            {
-                hidden: true,
-                path: "lecture",
-                name: "Lecture",
-                component: () =>
-                    import('@/views/course/lecture'),
-                meta: {
-                    title: "课时管理"
-                }
-            },
-        ]
-  },
-    {
-      path: '/activity',
-      component: Layout,
-      children: [{
-          path: "assignment",
-          name: "Activity",
-          component: () =>
-              import('@/views/activity/assignment'),
-              meta: { title: '活动管理', icon: 'form', noCache: true }
-      }, {
-          hidden: true,
-          path: "execution",
-          name: "Execution",
-          component: () =>
-                import('@/views/activity/execution'),
-          meta: {
-              title: "执行情况"
-          }
+      {
+        path: "column",
+        name: "Column",
+        component: () =>
+          import('@/views/course/column'),
+        meta: { title: '课程管理', icon: 'education', noCache: true }
       },
-      ]
+      {
+        hidden: true,
+        path: "lecture",
+        name: "Lecture",
+        component: () =>
+          import('@/views/course/lecture'),
+        meta: {
+          title: "课时管理"
+        }
+      },
+    ]
+  },
+  {
+    path: '/activity',
+    component: Layout,
+    children: [{
+      path: "assignment",
+      name: "Activity",
+      component: () =>
+        import('@/views/activity/assignment'),
+      meta: { title: '活动管理', icon: 'form', noCache: true }
+    }, {
+      hidden: true,
+      path: "execution",
+      name: "Execution",
+      component: () =>
+        import('@/views/activity/execution'),
+      meta: {
+        title: "执行情况"
+      }
     },
-        {
-          path: '/student',
-          component: Layout,
-          children: [
-            {
-              path: 'index',
-              name: 'Student',
-              component: () => import('@/views/student/index'),
-              meta: { title: '学生管理', icon: 'peoples', noCache: true }
-            }
-          ]
-        },
-            {
-              path: '/center',
-              component: Layout,
-              children: [
-                {
-                  path: 'index',
-                  name: 'Center',
-                  component: () => import('@/views/center/index'),
-                  meta: { title: '展示中心', icon: 'tab', noCache: true }
-                }
-              ]
-            },
-
-
-      // {
-      //   path: '/notifications',
-      //   component: Layout,
-      //   children: [
-      //     {
-      //       path: 'index',
-      //       component: () => import('@/views/notifications/index'),
-      //       name: 'Notifications',
-      //       meta: { title: '公告', icon: 'icon', noCache: true }
-      //     }
-      //   ]
-      // },
-
-
+    ]
+  },
+  {
+    path: '/student',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Student',
+        component: () => import('@/views/student/index'),
+        meta: { title: '学生管理', icon: 'peoples', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/center',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Center',
+        component: () => import('@/views/center/index'),
+        meta: { title: '展示中心', icon: 'tab', noCache: true }
+      }
+    ]
+  },
+  // {
+  //   path: '/notifications',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/notifications/index'),
+  //       name: 'Notifications',
+  //       meta: { title: '公告', icon: 'icon', noCache: true }
+  //     }
+  //   ]
+  // },
   {
     path: '/icon',
     component: Layout,
     children: [
       {
-          hidden: true,
+        hidden: true,
         path: 'index',
         component: () => import('@/views/icons/index'),
         name: 'Icons',
@@ -163,7 +159,6 @@ export const asyncRoutes = [
       }
     ]
   },
-
   { path: '*', redirect: '/404', hidden: true }
 ]
 

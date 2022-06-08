@@ -112,9 +112,9 @@
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row, $index }">
-        <el-button type="warning" size="mini" @click="checkAssignment(row)">
-          批改
-        </el-button>
+          <el-button type="warning" size="mini" @click="checkAssignment(row)">
+            批改
+          </el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
@@ -207,13 +207,13 @@
 
 <script>
 import {
-  fetchAssignment,
   createAssignment,
-  updateAssignment,
   deleteAssignmnet,
-  fetchExecutionStatusCount,
+  fetchAssignment,
+  updateAssignment,
+  fetchExecutionCount,
 } from "@/api/activity";
-import { fetchCourseList } from "@/api/column";
+import { fetchCourses } from "@/api/column";
 import { parseTime } from "@/utils";
 import { mapGetters } from "vuex";
 import Tinymce from "@/components/Tinymce";
@@ -290,14 +290,14 @@ export default {
     waves,
   },
   created() {
-    this.getCourseList();
-    this.getList();
+    this.fetchCourses();
+    this.fetchAssignments();
   },
   methods: {
-    fetchExecutionStatusCount() {
+    fetchExecutionCount() {
       for (var i = 0; i < this.list.length; i++) {
         let activity_id = this.list[i].id;
-        fetchExecutionStatusCount({
+        fetchExecutionCount({
           id: this.list[i].id,
           is_done: true,
         }).then((response) => {
@@ -306,7 +306,7 @@ export default {
       }
       for (var i = 0; i < this.list.length; i++) {
         let activity_id = this.list[i].id;
-        fetchExecutionStatusCount({
+        fetchExecutionCount({
           id: this.list[i].id,
           is_done: false,
         }).then((response) => {
@@ -314,28 +314,28 @@ export default {
         });
       }
     },
-    getCourseList() {
+    fetchCourses() {
       this.currentSelectedCourse = course_id;
       this.listLoading = true;
-      fetchCourseList({
+      fetchCourses({
         id: this.id,
       }).then((response) => {
         this.courseList = response.data;
         this.listLoading = false;
       });
     },
-    getList() {
+    fetchAssignments() {
       this.listLoading = true;
       fetchAssignment(this.listQuery).then((response) => {
         this.list = response.data;
-        this.fetchExecutionStatusCount();
+        this.fetchExecutionCount();
         this.total = response.data.length;
         this.listLoading = false;
       });
     },
     handleFilter() {
       this.currentSelectedCourse = this.listQuery.selectedCourse;
-      this.getList();
+      this.fetchAssignments();
     },
     resetTemp() {
       this.temp = {
@@ -387,7 +387,6 @@ export default {
         }
       });
     },
-
     checkAssignment(row) {
       this.$router.push({
         name: "Execution",

@@ -62,11 +62,10 @@ export default {
     this.listLoading = true;
     fetchCourses({
       id: this.id,
-      sort: "count",
+      sort_by: "count",
     })
       .then((res) => {
         this.list = res.data;
-        console.log(this.list);
       })
       .finally(() => {
         this.listLoading = false;

@@ -25,9 +25,6 @@
                 查看课程评论
               </el-button>
             </el-badge>
-            <!-- <el-button size="small" type="default" @click="changeDetailIsend"
-          >设为连载中</el-button
-        > -->
           </el-button-group>
         </div>
       </div>
@@ -500,16 +497,16 @@ const formatNameOptions = {
 const studentNameOptions = {};
 
 import {
-  fetchCourseDetail,
-  fetchCourseLectures,
-  fetchFormatsList,
+  fetchCourse,
+  fetchLectures,
+  fetchFormats,
   createLecture,
   deleteLecture,
   setPreviewLecture,
   fetchComments,
   deleteComments,
   fetchEvaluations,
-  updateCommentCheckStatus,
+  updateComment,
 } from "@/api/column.js";
 
 import { fetchStudents } from "@/api/user.js";
@@ -622,7 +619,7 @@ export default {
   methods: {
     getData() {
       this.detailLoading = true;
-      fetchCourseDetail({
+      fetchCourse({
         id: id,
         method: 1,
       })
@@ -667,7 +664,7 @@ export default {
     },
     getFormatsList() {
       this.listLoading = true;
-      fetchFormatsList().then((response) => {
+      fetchFormats().then((response) => {
         let formats = response.data;
         for (var format in formats) {
           formatOptions[formats[format].id] = formats[format].name;
@@ -716,7 +713,7 @@ export default {
     async getList() {
       this.resetTemp();
       this.listLoading = true;
-      const { data } = await fetchCourseLectures(this.listQuery);
+      const { data } = await fetchLectures(this.listQuery);
       this.list = data;
       this.listLoading = false;
     },
@@ -736,13 +733,13 @@ export default {
       axios
         .post(this.uploadOptions.action, formData)
         .then((response) => {
-            console.log(response.data);
-            this.temp["title"] = response.data.name.split('.').at(-2);
-            this.temp["content"] = response.data.name;
-              this.$message({
-                message: "操作成功",
-                type: "success",
-              });
+          console.log(response.data);
+          this.temp["title"] = response.data.name.split(".").at(-2);
+          this.temp["content"] = response.data.name;
+          this.$message({
+            message: "操作成功",
+            type: "success",
+          });
         })
         .finally(() => {
           this.listLoading = false;
@@ -777,14 +774,14 @@ export default {
     },
     checkComment(row, is_checking) {
       if (is_checking) {
-        this.updateCommentCheckStatus(row);
+        this.updateComment(row);
       }
       this.selectedLectureId = row.id;
       this.commentDialogVisible = true;
       this.fetchComments();
     },
-    updateCommentCheckStatus(row) {
-      updateCommentCheckStatus({
+    updateComment(row) {
+      updateComment({
         id: row.id,
       }).then((response) => {
         row.is_comment_check = true;
@@ -858,8 +855,7 @@ export default {
       this.listLoading = true;
       setPreviewLecture({
         id: row.id,
-        status,
-        update: "status",
+        is_preview: status,
       })
         .then((res) => {
           this.$message({

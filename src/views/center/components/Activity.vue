@@ -1,11 +1,11 @@
 <template>
-    <div class="user-activity">
-      <ActivityExecution
-        v-for="execution in executions"
-        v-bind:execution="execution"
-      >
-      </ActivityExecution>
-    </div>
+  <div class="user-activity">
+    <ActivityExecution
+      v-for="execution in executions"
+      v-bind:execution="execution"
+    >
+    </ActivityExecution>
+  </div>
 </template>
 
 <script>
@@ -92,12 +92,10 @@ export default {
     }
   }
 }
-
 .box-center {
   margin: 0 auto;
   display: table;
 }
-
 .text-muted {
   color: #777;
 }

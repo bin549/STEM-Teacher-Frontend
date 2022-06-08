@@ -184,12 +184,8 @@
 </template>
 
 <script>
-import { fetchList } from "@/api/user";
-import {
-  fetchCourseList,
-  createSelection,
-  deleteSelection,
-} from "@/api/column";
+import { fetchStudents } from "@/api/user";
+import { fetchCourses, createSelection, deleteSelection } from "@/api/column";
 import waves from "@/directive/waves";
 import { mapGetters } from "vuex";
 
@@ -246,17 +242,17 @@ export default {
     waves,
   },
   created() {
-    this.getCourseList();
+    this.fetchCourses();
     this.getList();
   },
   methods: {
     filterStudent(e) {
       console.log(e.target.value);
     },
-    getCourseList() {
+    fetchCourses() {
       this.currentSelectedCourse = course_id;
       this.listLoading = true;
-      fetchCourseList({
+      fetchCourses({
         id: this.id,
       }).then((response) => {
         this.courseList = response.data;
@@ -269,7 +265,7 @@ export default {
     },
     getList() {
       this.listLoading = true;
-      fetchList(this.listQuery).then((response) => {
+      fetchStudents(this.listQuery).then((response) => {
         this.list = response.data;
         this.total = response.data.length;
         this.listLoading = false;
@@ -301,11 +297,10 @@ export default {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           this.dialogBtnLoading = true;
-          const tempData = {
+          createSelection({
             user: this.temp.user_id,
             course: this.listQuery.selectedCourse,
-          };
-          createSelection(tempData)
+          })
             .then(() => {
               this.dialogFormVisible = false;
               this.$notify({

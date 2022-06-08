@@ -180,9 +180,7 @@
       :visible.sync="dialogFormVisible"
       v-loading="listLoading"
     >
-    <p class="execution-text">
-        {{ execution_text }}121
-    </p>
+      <p class="execution-text">{{ execution_text }}121</p>
       <el-row>
         <el-col
           :span="8"
@@ -199,9 +197,11 @@
                 cursor: pointer;
               "
             >
-              <el-image style="width: 130px; height: 130px" :src="img_url"
-              @click="previewImage(img_url, index)"
-              :preview-src-list="srcList"
+              <el-image
+                style="width: 130px; height: 130px"
+                :src="img_url"
+                @click="previewImage(img_url, index)"
+                :preview-src-list="srcList"
               ></el-image>
             </div>
           </el-card>
@@ -249,7 +249,7 @@ import {
   fetchExecutionImage,
 } from "@/api/activity";
 import { fetchCourseId } from "@/api/column";
-import { fetchList } from "@/api/user";
+import { fetchStudents } from "@/api/user";
 import waves from "@/directive/waves";
 
 const statusOptions = {
@@ -304,13 +304,12 @@ export default {
       dialogBtnLoading: false,
       dialogStatus: false,
       previewMedia: false,
-      srcList: [
-      ],
+      srcList: [],
     };
   },
   created() {
-    this.getStudentsList();
-    this.getList();
+    this.fetchStudents();
+    this.fetchExecutions();
   },
   filters: {
     statusFilter(status) {
@@ -321,12 +320,12 @@ export default {
     },
   },
   methods: {
-      previewImage(media, index) {
-          this.previewMedia = this.srcList[index];
-      },
-    getStudentsList() {
+    previewImage(media, index) {
+      this.previewMedia = this.srcList[index];
+    },
+    fetchStudents() {
       this.listLoading = true;
-      fetchList().then((response) => {
+      fetchStudents().then((response) => {
         this.studentsList = response.data;
         for (var student in this.studentsList) {
           userNameOptions[this.studentsList[student].id] =
@@ -335,7 +334,7 @@ export default {
         this.listLoading = false;
       });
     },
-    getList() {
+    fetchExecutions() {
       this.listLoading = true;
       fetchExecution(this.listQuery).then((response) => {
         this.list = response.data;
@@ -347,21 +346,21 @@ export default {
     checkExecution(row) {
       this.dialogFormVisible = true;
       this.temp = Object.assign({}, row);
-      this.execution_text = this.temp["content_text"]
+      this.execution_text = this.temp["content_text"];
       this.temp["mode"] = "check";
       fetchExecution(this.temp).then((res) => {
-          fetchExecutionImage({ id: this.temp["id"] }).then((response) => {
-            let images = response.data;
-            this.execution_image = [];
-            this.srcList = [];
-            for (var i = 0; i < images.length; i++) {
-              this.execution_image.push({
-                img_url: images[i]["media"],
-                img_preview_url: images[i]["media"],
-              });
-              this.srcList.push(images[i]["media"]);
-            }
-          });
+        fetchExecutionImage({ id: this.temp["id"] }).then((response) => {
+          let images = response.data;
+          this.execution_image = [];
+          this.srcList = [];
+          for (var i = 0; i < images.length; i++) {
+            this.execution_image.push({
+              img_url: images[i]["media"],
+              img_preview_url: images[i]["media"],
+            });
+            this.srcList.push(images[i]["media"]);
+          }
+        });
       });
     },
     updateAppraise() {
@@ -397,7 +396,7 @@ export default {
         });
     },
     backPage() {
-      fetchCourseId({ id: assignment_id, mode: "no" }).then((response) => {
+      fetchCourse({ id: assignment_id, mode: "no" }).then((response) => {
         this.$router.push({
           name: "education",
           query: {
@@ -411,7 +410,7 @@ export default {
 </script>
 
 <style media="screen">
-    .execution-text {
-        font-size: 18px;
-    }
+.execution-text {
+  font-size: 18px;
+}
 </style>
